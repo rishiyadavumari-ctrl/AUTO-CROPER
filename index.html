@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CARD SHEET PRO BY - RISHI YADAV — ID PDF to A4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<style>
+  :root {
+    --bg:#06080f; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.07);
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+    --txt:#eef1f8; --mut:#8d97ad; --bad:#ff6b81; --ok:#4ade80;
+    --a1:#6f8dff; --a2:#a66bff; --a3:#ff8a5c;
+    --grad:linear-gradient(135deg,var(--a1),var(--a2) 55%,var(--a3));
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0; color:var(--txt); background:var(--bg);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.5;
+    background-image:
+      radial-gradient(900px 500px at 8% -10%, rgba(111,141,255,.22), transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, rgba(166,107,255,.18), transparent 60%),
+      radial-gradient(700px 500px at 50% 110%, rgba(255,138,92,.12), transparent 60%);
+    background-attachment:fixed; min-height:100vh;
+  }
+  .wrap { max-width:1060px; margin:0 auto; padding:26px 18px 90px; }
+
+  /* header */
+  .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:26px; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .logo { width:42px; height:42px; border-radius:12px; background:var(--grad); display:grid; place-items:center; box-shadow:0 8px 28px rgba(111,141,255,.45); }
+  .brand b { font-family:"Space Grotesk",Inter,sans-serif; font-size:19px; letter-spacing:.2px; }
+  .brand small { display:block; color:var(--mut); font-size:12px; margin-top:-2px; }
+  .pill { font-size:12px; color:var(--mut); border:1px solid var(--line); padding:6px 12px; border-radius:99px; background:var(--panel); display:flex; gap:7px; align-items:center; }
+  .pill i { width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 10px var(--ok); }
+
+  .hero { text-align:center; margin:6px 0 26px; }
+  .hero h1 { font-family:"Space Grotesk",Inter,sans-serif; font-size:clamp(28px,5vw,46px); line-height:1.1; margin:0 0 12px; letter-spacing:-.5px; }
+  .grad { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p { color:var(--mut); max-width:640px; margin:0 auto; font-size:15px; }
+
+  /* steps */
+  .steps { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:22px 0 22px; }
+  .step { display:flex; align-items:center; gap:9px; padding:8px 14px; border-radius:99px; border:1px solid var(--line); background:var(--panel); color:var(--mut); font-size:13px; font-weight:500; transition:.25s; }
+  .step span { width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:700; background:rgba(255,255,255,.08); }
+  .step.on { color:var(--txt); border-color:var(--line2); }
+  .step.on span { background:var(--grad); color:#fff; }
+
+  /* glass cards */
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:20px; margin-bottom:18px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow:0 20px 60px rgba(0,0,0,.35); }
+  .card h2 { font-size:15px; margin:0 0 14px; font-weight:600; display:flex; align-items:center; gap:10px; justify-content:space-between; }
+  .card h2 em { font-style:normal; color:var(--mut); font-weight:400; font-size:12px; }
+
+  .drop { position:relative; border-radius:18px; padding:46px 18px; text-align:center; cursor:pointer; transition:.25s; border:1.5px dashed var(--line2); background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); overflow:hidden; }
+  .drop::before { content:""; position:absolute; inset:0; background:var(--grad); opacity:0; transition:.25s; }
+  .drop.over, .drop:hover { border-color:var(--a1); transform:translateY(-2px); }
+  .drop.over::before, .drop:hover::before { opacity:.07; }
+  .drop > * { position:relative; }
+  .dico { width:64px; height:64px; margin:0 auto 14px; border-radius:18px; background:var(--grad); display:grid; place-items:center; box-shadow:0 12px 36px rgba(166,107,255,.45); }
+  .drop .t { font-size:17px; font-weight:600; }
+  .drop .s { color:var(--mut); font-size:13px; margin-top:6px; }
+  .chips { display:flex; gap:7px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+  .chip { font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:99px; border:1px solid; letter-spacing:.2px; }
+
+  /* controls */
+  label { display:block; font-size:12.5px; color:var(--mut); margin-bottom:6px; font-weight:500; }
+  select, input[type=number] { width:100%; padding:10px 12px; border-radius:11px; border:1px solid var(--line); background:rgba(0,0,0,.35); color:var(--txt); font:inherit; font-size:14px; outline:none; transition:.2s; }
+  select:focus, input[type=number]:focus { border-color:var(--a1); box-shadow:0 0 0 3px rgba(111,141,255,.2); }
+  select option { background:#10131c; }
+  input[type=range] { width:100%; accent-color:var(--a2); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
+  .tog { display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--txt); cursor:pointer; margin:0; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:rgba(0,0,0,.2); user-select:none; }
+  .tog input { accent-color:var(--a2); width:16px; height:16px; }
+  .togs { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin-bottom:6px; }
+
+  details { border:1px solid var(--line); border-radius:14px; margin-top:12px; background:rgba(0,0,0,.18); }
+  details summary { cursor:pointer; padding:13px 16px; font-weight:600; font-size:14px; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+  details summary::-webkit-details-marker { display:none; }
+  details summary::after { content:"+"; color:var(--mut); font-size:18px; transition:.2s; }
+  details[open] summary::after { content:"–"; }
+  details .in { padding:4px 16px 16px; }
+
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button { font:inherit; font-size:14.5px; font-weight:600; color:#fff; border:0; cursor:pointer; padding:12px 20px; border-radius:12px; background:var(--grad); box-shadow:0 10px 30px rgba(111,141,255,.35); transition:.2s; }
+  button:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.08); }
+  button:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
+  button.sec { background:var(--panel2); border:1px solid var(--line); box-shadow:none; color:var(--txt); }
+  button.sec:hover:not(:disabled) { border-color:var(--line2); }
+  button.sm { padding:6px 11px; font-size:12px; border-radius:9px; }
+  button.ico { padding:6px 9px; }
+
+  /* file list */
+  .file { border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; background:rgba(0,0,0,.2); }
+  .fhead { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .fhead .nm { flex:1; min-width:120px; font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fhead .meta { color:var(--mut); font-size:12px; }
+  .badge { font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid; white-space:nowrap; }
+  .lock { font-size:11.5px; color:var(--mut); }
+  .set { display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:10px; padding:10px; border-radius:12px; background:rgba(255,255,255,.03); }
+  .thumb { position:relative; background:#fff; padding:5px; border-radius:9px; cursor:pointer; border:2px solid transparent; transition:.2s; box-shadow:0 6px 20px rgba(0,0,0,.35); }
+  .thumb:hover { transform:translateY(-2px); }
+  .thumb canvas { display:block; max-width:230px; height:auto; }
+  .thumb.off { opacity:.25; border-color:var(--bad); }
+  .thumb .no { position:absolute; top:-8px; left:-8px; width:24px; height:24px; border-radius:50%; background:var(--grad); color:#fff; font-size:12px; font-weight:700; display:grid; place-items:center; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+  .thumb .fb { position:absolute; bottom:-9px; right:8px; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:99px; background:#0c0f18; color:var(--txt); border:1px solid var(--line2); }
+  .hint { font-size:12px; color:var(--mut); margin-top:8px; }
+
+  /* progress + status */
+  .bar { height:4px; border-radius:99px; background:rgba(255,255,255,.07); overflow:hidden; margin-top:14px; }
+  .bar i { display:block; height:100%; width:0; background:var(--grad); transition:width .25s; }
+  .bar.busy i { width:35% !important; animation:slide 1.1s infinite ease-in-out; }
+  @keyframes slide { 0%{margin-left:-35%} 100%{margin-left:100%} }
+  #status { color:var(--mut); font-size:13.5px; }
+
+  /* output */
+  .cta { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; padding:16px; border-radius:16px; background:linear-gradient(135deg,rgba(111,141,255,.16),rgba(166,107,255,.12)); border:1px solid var(--line2); margin-bottom:16px; }
+  .cta b { font-size:15px; } .cta small { color:var(--mut); display:block; }
+  .cta button { font-size:15.5px; padding:14px 26px; }
+  #outPreview { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+  #outPreview canvas { background:#fff; max-width:440px; width:100%; height:auto; border-radius:6px; box-shadow:0 18px 50px rgba(0,0,0,.55); }
+
+  /* card customization */
+  .custbar { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:-8px 0 22px; }
+  #custBtn, #photoBtn { font-size:17px; padding:16px 34px; border-radius:16px; display:flex; align-items:center; gap:10px; box-shadow:0 14px 44px rgba(166,107,255,.45); }
+  #photoBtn { background:linear-gradient(135deg,#2dd4bf,#6f8dff); box-shadow:0 14px 44px rgba(45,212,191,.35); }
+  #custBtn.back, #photoBtn.back { background:var(--panel2); border:1px solid var(--line2); box-shadow:none; }
+  input[type=text] { width:100%; padding:10px 12px; border-radius:11px; border:1px solid var(--line); background:rgba(0,0,0,.35); color:var(--txt); font:inherit; font-size:14px; outline:none; transition:.2s; }
+  input[type=text]:focus { border-color:var(--a1); box-shadow:0 0 0 3px rgba(111,141,255,.2); }
+  .sl label { display:flex; justify-content:space-between; }
+  .sl label span { color:var(--txt); font-weight:600; }
+  #phOne { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+  #phOne .po { text-align:center; font-size:12px; color:var(--mut); max-width:170px; }
+  #phOne .po div { margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #phOne canvas { height:210px; width:auto; border-radius:6px; box-shadow:0 12px 36px rgba(0,0,0,.5); background:#fff; }
+  #phPreview { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+  #phPreview canvas { background:#fff; max-width:440px; width:100%; height:auto; border-radius:6px; box-shadow:0 18px 50px rgba(0,0,0,.55); }
+  .note { font-size:12.5px; color:var(--mut); margin-top:10px; }
+  /* multi-person photo chips */
+  #phChips { display:flex; gap:16px; flex-wrap:wrap; padding-top:8px; }
+  .pchip { position:relative; width:118px; border:2px solid var(--line); border-radius:14px; padding:6px; background:rgba(0,0,0,.22); cursor:pointer; transition:.2s; }
+  .pchip:hover { transform:translateY(-2px); border-color:var(--line2); }
+  .pchip.on { border-color:var(--a1); box-shadow:0 0 0 3px rgba(111,141,255,.28), 0 12px 30px rgba(111,141,255,.25); }
+  .pchip img { width:100%; aspect-ratio:33/43.2; object-fit:cover; border-radius:8px; display:block; background:#fff; }
+  .pchip .t { font-size:12.5px; font-weight:600; margin-top:7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pchip .c { font-size:11px; color:var(--mut); white-space:nowrap; }
+  .pchip .n { position:absolute; top:-9px; left:-9px; width:24px; height:24px; border-radius:50%; background:var(--grad); color:#fff; font-size:12px; font-weight:700; display:grid; place-items:center; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+  .pchip .x { position:absolute; top:-9px; right:-9px; width:24px; height:24px; padding:0; border-radius:50%; background:var(--bad); color:#fff; font-size:16px; line-height:1; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+  .stp label { margin-bottom:6px; }
+  .stp .sr { display:flex; gap:8px; align-items:stretch; }
+  .stp .sr button { width:46px; padding:0; font-size:22px; line-height:1; border-radius:11px; flex:none; }
+  .stp .sr input { text-align:center; font-weight:600; font-size:16px; }
+  .stp small { display:block; margin-top:5px; color:var(--mut); font-size:11.5px; }
+  .cgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+  .cwarn { color:var(--mut); font-size:13px; padding:14px; border:1px dashed var(--line2); border-radius:12px; text-align:center; }
+  #cPreview { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+  #cPreview canvas { background:#fff; max-width:440px; width:100%; height:auto; border-radius:6px; box-shadow:0 18px 50px rgba(0,0,0,.55); }
+  .alert { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; padding:16px 18px; margin-bottom:18px; border-radius:18px; border:1px solid rgba(255,107,129,.55); background:linear-gradient(135deg,rgba(255,107,129,.16),rgba(255,138,92,.1)); box-shadow:0 14px 40px rgba(255,107,129,.18); }
+  .alert b { font-size:15px; color:#ffb3bf; } .alert div div { color:var(--txt); font-size:13.5px; margin-top:4px; max-width:640px; }
+  button.warn { background:linear-gradient(135deg,#ff6b81,#ff8a5c); box-shadow:0 10px 30px rgba(255,107,129,.4); }
+  .badnote { font-size:13px; color:#ffb3bf; padding:10px 12px; border:1px dashed rgba(255,107,129,.5); border-radius:12px; margin-bottom:8px; }
+  #mnModal { align-items:flex-start; overflow:auto; }
+  #mnModal .mbox { max-width:1100px; margin:auto; }
+  #mnCv { width:100%; height:auto; cursor:crosshair; touch-action:none; background:#fff; border-radius:10px; display:block; }
+  .mnwrap { max-height:68vh; overflow:auto; border-radius:10px; border:1px solid var(--line2); margin:10px 0 14px; }
+  #mnHint { font-size:14px; font-weight:600; padding:10px 14px; border-radius:12px; background:var(--panel2); border:1px solid var(--line); }
+  #fx { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:80; }
+  #congrats { position:fixed; left:50%; top:22%; transform:translate(-50%,-30px) scale(.9); z-index:81; pointer-events:none; opacity:0; transition:.5s cubic-bezier(.2,.9,.3,1.3); text-align:center; padding:20px 34px; border-radius:22px; background:rgba(12,15,24,.82); border:1px solid var(--line2); backdrop-filter:blur(14px); box-shadow:0 30px 90px rgba(166,107,255,.45); }
+  #congrats.show { opacity:1; transform:translate(-50%,0) scale(1); }
+  #congrats b { display:block; font-family:"Space Grotesk",Inter,sans-serif; font-size:clamp(24px,5vw,38px); background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #congrats span { color:var(--mut); font-size:14px; }
+  .hide { display:none !important; }
+  .modal { position:fixed; inset:0; background:rgba(3,5,10,.72); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:50; padding:16px; }
+  .mbox { background:#0e121c; border:1px solid var(--line2); border-radius:20px; padding:22px; width:100%; max-width:380px; box-shadow:0 30px 80px rgba(0,0,0,.6); }
+  .mbox .k { width:44px; height:44px; border-radius:13px; background:var(--grad); display:grid; place-items:center; margin-bottom:12px; }
+  .mbox input { width:100%; padding:12px; border-radius:11px; border:1px solid var(--line2); background:rgba(0,0,0,.4); color:var(--txt); font:inherit; font-size:15px; margin:12px 0 16px; outline:none; }
+  .mbox input:focus { border-color:var(--a1); box-shadow:0 0 0 3px rgba(111,141,255,.2); }
+  footer { text-align:center; color:var(--mut); font-size:12px; margin-top:30px; }
+
+  /* passport photo: background colour picker */
+  .bgrow { display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end; }
+  input[type=color] { width:84px; height:48px; padding:3px; border-radius:12px; border:1px solid var(--line2); background:rgba(0,0,0,.35); cursor:pointer; }
+  .rgb { display:flex; gap:8px; }
+  .rgb > div { width:82px; }
+  .rgb label { text-align:center; margin:6px 0 0; }
+  .rgb input { text-align:center; font-weight:600; font-size:16px; }
+  #ph_hex { width:112px; font-weight:600; text-transform:uppercase; }
+  .sw { display:flex; gap:9px; flex-wrap:wrap; margin-top:16px; }
+  .sw i { width:36px; height:36px; border-radius:50%; border:2px solid var(--line2); cursor:pointer; transition:.15s; display:block; }
+  .sw i:hover { transform:scale(1.12); }
+  .sw i.sel { border-color:#fff; box-shadow:0 0 0 3px rgba(111,141,255,.65); }
+
+  /* ---------- login / registration gate ---------- */
+  #auth { display:none; min-height:100vh; align-items:center; justify-content:center; padding:24px 16px; }
+  body.locked #auth { display:flex; }
+  body.locked .wrap { display:none !important; }
+  .auth-card { width:100%; max-width:440px; background:var(--panel); border:1px solid var(--line); border-radius:24px; padding:26px 22px 22px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow:0 30px 90px rgba(0,0,0,.5); }
+  .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .auth-brand b { display:block; font-family:"Space Grotesk",Inter,sans-serif; font-size:16px; line-height:1.25; }
+  .auth-brand small { display:block; color:var(--mut); font-size:12px; }
+  .atabs { display:grid; grid-template-columns:1fr 1.15fr 1.3fr; gap:6px; padding:5px; border-radius:14px; background:rgba(0,0,0,.35); border:1px solid var(--line); margin-bottom:6px; }
+  .atab { padding:10px 4px; font-size:13px; font-weight:600; border-radius:10px; background:transparent; color:var(--mut); box-shadow:none; }
+  .atab:hover:not(:disabled) { transform:none; filter:none; color:var(--txt); }
+  .atab.on { background:var(--grad); color:#fff; box-shadow:0 8px 22px rgba(111,141,255,.35); }
+  .aform label { margin-top:16px; }
+  .aform input[type=text], .aform input[type=tel], .aform input[type=password] { width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:rgba(0,0,0,.38); color:var(--txt); font:inherit; font-size:15px; outline:none; transition:.2s; }
+  .aform input:focus { border-color:var(--a1); box-shadow:0 0 0 3px rgba(111,141,255,.2); }
+  .pwwrap { position:relative; }
+  .pwwrap input { padding-right:50px !important; }
+  .eye { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:38px; height:34px; padding:0; background:transparent; box-shadow:none; color:var(--mut); border-radius:9px; display:grid; place-items:center; }
+  .eye:hover:not(:disabled) { transform:translateY(-50%); filter:none; color:var(--txt); }
+  .abtn { width:100%; margin-top:18px; padding:14px; font-size:15.5px; }
+  .amsg { min-height:20px; margin-top:12px; font-size:13px; line-height:1.45; }
+  .amsg.err { color:#ff9aa9; }
+  .amsg.ok { color:var(--ok); }
+  .alink { background:none; box-shadow:none; color:var(--a1); padding:4px 0; font-size:13px; font-weight:600; }
+  .alink:hover:not(:disabled) { transform:none; filter:none; text-decoration:underline; }
+  .alink:disabled { color:var(--mut); }
+  .anote { margin-top:14px; padding:11px 13px; border-radius:12px; font-size:12.5px; line-height:1.5; color:var(--mut); border:1px dashed var(--line2); }
+  .sms { margin-top:16px; padding:12px 14px; border-radius:14px; border:1px dashed rgba(255,193,92,.55); background:rgba(255,193,92,.08); font-size:13px; line-height:1.5; }
+  .sms small { display:block; color:#ffd27a; font-weight:700; letter-spacing:.3px; margin-bottom:4px; }
+  .sms b { font-size:15px; letter-spacing:.12em; }
+  .otpin { text-align:center; letter-spacing:.7em; font-size:26px !important; font-weight:700; padding-left:.7em !important; }
+  .arow { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:6px; flex-wrap:wrap; }
+  .uchip { display:flex; align-items:center; gap:10px; padding:5px 6px 5px 12px; border:1px solid var(--line); border-radius:99px; background:var(--panel); font-size:12.5px; max-width:100%; }
+  .uchip span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:240px; }
+  .top { flex-wrap:wrap; }
+  .cred { text-align:left; margin:16px 0 4px; border:1px solid var(--line2); border-radius:14px; background:rgba(0,0,0,.3); overflow:hidden; }
+  .cred > div { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; }
+  .cred > div + div { border-top:1px solid var(--line); }
+  .cred span { color:var(--mut); font-size:12.5px; white-space:nowrap; }
+  .cred b { font-size:16px; letter-spacing:.04em; word-break:break-all; text-align:right; flex:1; }
+  .cred .eye { position:static; transform:none; flex:none; }
+  .cred .eye:hover:not(:disabled) { transform:none; }
+  #authPop .mbox { max-width:340px; text-align:center; }
+  #authPop .okk { width:52px; height:52px; margin:0 auto 12px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,#34d399,#2dd4bf); box-shadow:0 10px 30px rgba(52,211,153,.4); }
+</style>
+</head>
+<body class="locked">
+<div id="auth">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.6-1.6 1.7-2.4 3-2.4s2.4.8 3 2.4M14.5 10h4M14.5 13.5h3"/></svg>
+      </div>
+      <div><b>CARD SHEET PRO BY - RISHI YADAV</b><small>Aage badhne ke liye login karo</small></div>
+    </div>
+    <div id="authWarn" class="amsg err hide"></div>
+
+    <div class="atabs" role="tablist">
+      <button type="button" class="atab on" data-tab="login" role="tab">Login</button>
+      <button type="button" class="atab" data-tab="register" role="tab">Registration</button>
+      <button type="button" class="atab" data-tab="forgot" role="tab">Forgot Password</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="fLogin" class="aform" novalidate>
+      <label for="lg_user">Username (mobile number)</label>
+      <input id="lg_user" type="tel" inputmode="numeric" autocomplete="username" maxlength="16" placeholder="10 digit mobile number" />
+      <label for="lg_pass">Password</label>
+      <div class="pwwrap"><input id="lg_pass" type="password" autocomplete="current-password" placeholder="Password" /><button type="button" class="eye" data-for="lg_pass" aria-label="Password dikhao ya chhupao"></button></div>
+      <div id="lg_msg" class="amsg"></div>
+      <button type="submit" class="abtn" id="lg_btn">Customer Login</button>
+    </form>
+
+    <!-- REGISTRATION -->
+    <form id="fReg" class="aform hide" novalidate>
+      <label for="rg_mobile">Mobile number (yahi aapka Username hoga)</label>
+      <input id="rg_mobile" type="tel" inputmode="numeric" autocomplete="tel" maxlength="16" placeholder="10 digit mobile number" />
+      <label for="rg_name">Aapka naam</label>
+      <input id="rg_name" type="text" autocomplete="name" maxlength="60" placeholder="jaise: Rishi Yadav" />
+      <label for="rg_shop">Shop name</label>
+      <input id="rg_shop" type="text" autocomplete="organization" maxlength="80" placeholder="jaise: Yadav Computer Center" />
+      <label for="rg_pass">Password</label>
+      <div class="pwwrap"><input id="rg_pass" type="password" autocomplete="new-password" placeholder="Kam se kam 6 akshar" /><button type="button" class="eye" data-for="rg_pass" aria-label="Password dikhao ya chhupao"></button></div>
+      <div id="rg_msg" class="amsg"></div>
+      <button type="submit" class="abtn" id="rg_btn">Submit</button>
+    </form>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="fForgot" class="aform hide">
+      <form id="fgS1" novalidate>
+        <label for="fg_user">Username (mobile number)</label>
+        <input id="fg_user" type="tel" inputmode="numeric" autocomplete="username" maxlength="16" placeholder="Registered mobile number" />
+        <div id="fgDemoNote" class="anote hide"></div>
+        <button type="submit" class="abtn" id="fg_send">OTP bhejo</button>
+      </form>
+
+      <form id="fgS2" class="hide" novalidate>
+        <div id="fgSent" style="font-size:13.5px;color:var(--mut)"></div>
+        <div id="smsBox" class="sms hide"><small>📩 DEMO SMS</small><span id="smsText"></span></div>
+        <label for="fg_otp">4 digit OTP</label>
+        <input id="fg_otp" class="otpin" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••" />
+        <div class="arow">
+          <button type="button" class="alink" id="fg_resend" disabled>OTP dobara bhejo</button>
+          <button type="button" class="alink" id="fg_change">Mobile number badlo</button>
+        </div>
+        <button type="submit" class="abtn" id="fg_verify">Submit</button>
+      </form>
+
+      <form id="fgS3" class="hide" novalidate>
+        <label for="fg_p1">New Password</label>
+        <div class="pwwrap"><input id="fg_p1" type="password" autocomplete="new-password" placeholder="Naya password (kam se kam 6 akshar)" /><button type="button" class="eye" data-for="fg_p1" aria-label="Password dikhao ya chhupao"></button></div>
+        <label for="fg_p2">Confirm New Password</label>
+        <div class="pwwrap"><input id="fg_p2" type="password" autocomplete="new-password" placeholder="Naya password dobara likho" /><button type="button" class="eye" data-for="fg_p2" aria-label="Password dikhao ya chhupao"></button></div>
+        <button type="submit" class="abtn" id="fg_reset">Password reset karo</button>
+      </form>
+      <div id="fg_msg" class="amsg"></div>
+    </div>
+  </div>
+</div>
+
+<div id="authPop" class="modal hide" style="z-index:120">
+  <div class="mbox">
+    <div class="okk"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div style="font-weight:700;font-size:18px">Registration ho gaya</div>
+    <div style="color:var(--mut);font-size:13px;margin-top:4px">Ye details yaad rakho ya screenshot le lo</div>
+    <div class="cred">
+      <div><span>Aapka Username</span><b id="popUser"></b></div>
+      <div><span>Aapka Password</span><b id="popPass"></b><button type="button" class="eye" id="popEye" aria-label="Password dikhao ya chhupao"></button></div>
+    </div>
+    <button type="button" class="abtn" id="popGo">Login karo</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.6-1.6 1.7-2.4 3-2.4s2.4.8 3 2.4M14.5 10h4M14.5 13.5h3"/></svg>
+      </div>
+      <div><b>CARD SHEET PRO BY - RISHI YADAV</b><small>ID card PDF &rarr; A4 print sheet</small></div>
+    </div>
+    <div class="row" style="justify-content:flex-end">
+      <div class="pill"><i></i> 100% private &middot; browser me hi process</div>
+      <div id="userChip" class="uchip hide"><span id="uName"></span><button class="sec sm" id="logoutBtn" type="button">Logout</button></div>
+    </div>
+  </div>
+
+  <div class="custbar">
+    <button id="custBtn"><span id="custIco">🎛</span><span id="custTxt">Card Customization</span></button>
+    <button id="photoBtn"><span id="photoIco">📸</span><span id="photoTxt">Passport Photo</span></button>
+  </div>
+
+  <div id="mainView">
+  <div class="hero">
+    <h1>Kisi bhi ID PDF ko <span class="grad">A4 print sheet</span> banao</h1>
+    <p>Aadhaar, Ayushman, Driving Licence, RC, PAN, Voter ID &mdash; PDF daalo. Tool document pehchanega, card crop karega, front pehle aur back baad me lagakar ek A4 par de dega.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step on" id="st1"><span>1</span> PDF upload</div>
+    <div class="step" id="st2"><span>2</span> Auto detect &amp; order</div>
+    <div class="step" id="st3"><span>3</span> A4 PDF download</div>
+  </div>
+
+  <div id="alertBar" class="alert hide">
+    <div><b>⚠ A4 PDF sahi nahi mil paayi</b><div id="alertTxt"></div></div>
+    <button id="alertBtn" class="warn">✂ Manual select</button>
+  </div>
+
+  <div class="card">
+    <div class="drop" id="drop">
+      <div class="dico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></div>
+      <div class="t">PDF yahan drag &amp; drop karo ya click karke chuno</div>
+      <div class="s">Ek saath kai PDF chun sakte ho &middot; Password-protected PDF ka password puchh liya jayega</div>
+      <div class="chips" id="chips"></div>
+      <input type="file" id="file" accept="application/pdf,.pdf" multiple class="hide" />
+    </div>
+  </div>
+
+  <div class="card hide" id="listCard">
+    <h2><span>Detected documents</span> <button class="sec sm" id="clear">Sab hatao</button></h2>
+    <div id="list"></div>
+    <div class="hint">Card par click = output se hatao / wapas lao. &#8645; button se front-back badlo. &#9650;&#9660; se document ka order badlo.</div>
+  </div>
+
+  <div class="card">
+    <h2><span>Settings</span> <em>defaults aapke naap ke hisaab se set hain</em></h2>
+    <div class="togs">
+      <label class="tog"><input type="checkbox" id="autoorder" checked /> Front pehle, Back baad me (auto detect)</label>
+      <label class="tog"><input type="checkbox" id="autosort" /> Documents type ke hisaab se sort karo</label>
+      <label class="tog"><input type="checkbox" id="auto" /> Banne par apne aap download</label>
+    </div>
+
+    <details>
+      <summary>A4 layout &amp; size</summary>
+      <div class="in"><div class="grid">
+        <div><label>Card width (mm)</label><input type="number" id="cw" value="85" step="0.1" min="20" max="200" /></div>
+        <div><label>Card height (mm)</label><input type="number" id="chh" value="54.8" step="0.1" min="20" max="200" /></div>
+        <div><label>Card size mode</label>
+          <select id="hmode"><option value="fixed">Fixed &mdash; width &times; height</option><option value="auto">Auto height (stretch nahi hoga)</option></select></div>
+        <div><label>Gap &mdash; card ke beech, side me (mm)</label><input type="number" id="gp" value="1.5" step="0.1" min="0" max="30" /></div>
+        <div><label>Gap &mdash; rows ke beech, upar-neeche (mm)</label><input type="number" id="rgp" value="3.2" step="0.1" min="0" max="30" /></div>
+        <div><label>Upar ka margin (mm)</label><input type="number" id="tm" value="3" step="0.5" min="0" max="50" /></div>
+        <div><label>Left/Right shift (mm)</label><input type="number" id="xs" value="0" step="0.5" min="-50" max="50" /></div>
+      </div></div>
+    </details>
+
+    <details>
+      <summary>Quality &amp; darkness</summary>
+      <div class="in"><div class="grid">
+        <div><label>Output quality mode</label>
+          <select id="qmode"><option value="vec">Vector &mdash; sabse sharp</option><option value="img">Image (PNG)</option></select></div>
+        <div><label>Render quality</label>
+          <select id="scale"><option value="2">Normal (2x)</option><option value="3" selected>High (3x)</option><option value="4">Very High (4x)</option></select></div>
+        <div><label>Text darkness: <span id="dv">0</span> (0 = original)</label><input type="range" id="dark" min="0" max="100" value="0" /></div>
+      </div></div>
+    </details>
+
+    <details>
+      <summary>Detection (advanced)</summary>
+      <div class="in"><div class="grid">
+        <div><label>Document type</label>
+          <select id="ctype">
+            <option value="auto">Auto (Aadhaar apne aap pehchane)</option>
+            <option value="aadhaar">Aadhaar letter (neeche ke front + back card)</option>
+            <option value="other">Other (Aadhaar mode band)</option>
+          </select></div>
+        <div><label>White sensitivity: <span id="tv">245</span></label><input type="range" id="th" min="200" max="254" value="245" /></div>
+        <div><label>Chhote items ignore (%): <span id="mv">20</span></label><input type="range" id="minpct" min="0" max="60" value="20" /></div>
+        <div><label class="tog" style="margin-top:22px"><input type="checkbox" id="split" checked /> Front/Back alag detect karo</label></div>
+        <div><label>Aadhaar: card kahan se shuru (% upar se)</label><input type="number" id="a_top" value="74.4" step="0.1" min="50" max="95" /></div>
+        <div><label>Aadhaar: front kahan khatam (% chaudai)</label><input type="number" id="a_ml" value="49.2" step="0.1" min="30" max="60" /></div>
+        <div><label>Aadhaar: back kahan se shuru (% chaudai)</label><input type="number" id="a_mr" value="50.5" step="0.1" min="40" max="70" /></div>
+      </div></div>
+    </details>
+
+    <div class="row" style="margin-top:18px">
+      <button id="go" disabled>A4 PDF banao</button>
+      <span id="status"></span>
+    </div>
+    <div class="bar" id="bar"><i id="barfill"></i></div>
+  </div>
+
+  <div class="card hide" id="outCard">
+    <div class="cta">
+      <div><b id="ctaT">A4 PDF taiyaar hai</b><small id="ctaS"></small></div>
+      <div class="row">
+        <button id="dl">&#11015; Download A4 PDF</button>
+        <button class="sec" id="opentab">Naye tab me kholo</button>
+        <a id="dlink" href="#" download="A4_cards.pdf" class="hide"></a>
+      </div>
+    </div>
+    <div id="outPreview"></div>
+  </div>
+
+  </div><!-- /mainView -->
+
+  <div id="custView" class="hide">
+    <div class="card">
+      <h2><span>Card Customization</span> <em>badlaav turant A4 preview me dikhega</em></h2>
+      <div class="cgrid" id="cgrid"></div>
+      <div class="row" style="margin-top:18px">
+        <button class="sec" id="cReset">Default par wapas</button>
+        <button id="cDl" disabled>&#11015; Download A4 PDF</button>
+        <span id="cStatus" style="color:var(--mut);font-size:13.5px"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span>Live A4 preview</span></h2>
+      <div id="cWarn" class="cwarn">Preview ke liye pehle PDF upload karo (Back dabake). Settings tab bhi yahin se badal sakte ho.</div>
+      <div id="cPreview"></div>
+    </div>
+  </div>
+
+  <div id="photoView" class="hide">
+    <div class="card">
+      <h2><span>📸 Passport Size Photo Sheet</span> <em>photo daalo &rarr; name/date likho &rarr; sheet download karo</em></h2>
+      <div class="drop" id="phDrop" style="padding:30px 18px">
+        <div class="dico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg></div>
+        <div class="t">Photo yahan drag &amp; drop karo ya click karke chuno</div>
+        <div class="s" id="phInfo">JPG / PNG / WEBP &middot; jitni badi aur saaf photo, utni achhi quality</div>
+        <input type="file" id="phFile" accept="image/*" multiple class="hide" />
+      </div>
+    </div>
+
+    <div class="card hide" id="phListCard">
+      <h2><span>👥 Photos (alag-alag log)</span> <em id="phActiveTxt"></em></h2>
+      <div id="phChips"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="sec sm" id="phAdd" type="button">+ Aur photo jodo</button>
+      </div>
+      <div class="note">Photo par click karo &rarr; neeche us photo ka name, date, background, kitne copy aur size badal sakte ho. Har photo ke utne copy sheet me ek ke baad ek lagte jayenge (ek line me 6, phir agli line). Naye photo me size, background, strip aur date pichli photo se aa jati hai, kam-zyada kar sakte ho.</div>
+    </div>
+
+    <div class="card">
+      <h2><span>Name &amp; Date</span> <em>dono khali chhodo to saadha photo niklega &middot; selected photo ke liye</em></h2>
+      <div class="grid">
+        <div><label>Name (jaisi spelling chahiye waisi likho)</label><input type="text" id="ph_name" placeholder="JAISE : RISHI YADAV" autocomplete="off" /></div>
+        <div><label>Date</label>
+          <div class="row" style="flex-wrap:nowrap"><input type="text" id="ph_date" placeholder="DD/MM/YYYY" autocomplete="off" /><button class="sec sm" id="phToday" type="button" style="white-space:nowrap">Aaj ki date</button></div></div>
+        <div><label>Name/Date strip ka rang</label>
+          <select id="ph_strip"><option value="white">Safed strip, kaala text</option><option value="dark">Kaala strip, safed text</option></select></div>
+      </div>
+      <div class="note">Name aur date photo ke neeche, photo ke andar hi strip me aate hain (photo ka size same rehta hai). Hindi me bhi likh sakte ho.</div>
+    </div>
+
+    <div class="card">
+      <h2><span>🔢 Kitne photo &amp; Size</span> <em>sirf selected photo ke liye &mdash; kam-zyada kar sakte ho</em></h2>
+      <div class="cgrid" id="phEGrid"></div>
+    </div>
+
+    <div class="card">
+      <h2><span>Photo adjust &amp; Lighting</span> <button class="sec sm" id="phReset" type="button">Reset</button></h2>
+      <label class="tog" style="margin-bottom:14px"><input type="checkbox" id="ph_auto" checked /> ✨ Auto lighting &mdash; andhere ko halka ubhare, roshni theek kare (sahi quality ke saath)</label>
+      <div class="grid" id="phSl"></div>
+      <div class="note">Photo chhoti ho to bhi tool ise smooth tareeke se bada karke sharp karta hai, par asli quality ke liye badi photo hi daalo.</div>
+    </div>
+
+    <div class="card">
+      <h2><span>🎨 Background Colour</span> <em>koi bhi rang chuno &mdash; photo ka background usi rang me badal jayega</em></h2>
+      <label class="tog" style="margin-bottom:16px"><input type="checkbox" id="ph_bg_on" /> Background badlo (insaan ko alag karke naya rang lagao)</label>
+      <div class="bgrow">
+        <div><label>Rang chuno</label><input type="color" id="ph_bg" value="#ffffff" /></div>
+        <div class="rgb">
+          <div><input type="number" id="ph_r" min="0" max="255" value="255" /><label>R</label></div>
+          <div><input type="number" id="ph_g" min="0" max="255" value="255" /><label>G</label></div>
+          <div><input type="number" id="ph_b" min="0" max="255" value="255" /><label>B</label></div>
+        </div>
+        <div><label>Hex</label><input type="text" id="ph_hex" value="#FFFFFF" maxlength="7" autocomplete="off" /></div>
+        <button class="sec sm" id="phEye" type="button" style="display:none;margin-bottom:6px">💧 Screen se rang uthao</button>
+      </div>
+      <div class="sw" id="phSw"></div>
+      <div class="grid" id="phBgSl" style="margin-top:18px"></div>
+      <div class="note">Pehli baar background AI model internet se load hota hai (thoda time lagta hai), uske baad turant chalta hai. Photo kahin upload nahi hoti &mdash; sab kuch aapke browser me hota hai. Baal ya kinare par purana rang dikhe to "Kinara" slider ko andar ki taraf badhao.</div>
+    </div>
+
+    <div class="card">
+      <h2><span>Sheet layout</span> <em>sab log ki photo ek ke baad ek lagti hain &middot; ek line me 6</em></h2>
+      <div class="cgrid" id="phGrid"></div>
+      <div class="grid" style="margin-top:14px">
+        <div><label>Page size</label><select id="ph_page"><option value="a4">A4 (210 &times; 297 mm)</option><option value="letter">Letter (8.5 &times; 11 in)</option></select></div>
+      </div>
+      <div class="togs" style="margin-top:14px">
+        <label class="tog"><input type="checkbox" id="ph_center" checked /> Line ko page ke beech me rakho</label>
+        <label class="tog"><input type="checkbox" id="ph_border" checked /> Photo ke chaaro taraf patli line (kaatne ke liye)</label>
+        <label class="tog"><input type="checkbox" id="ph_dl" /> Banne par apne aap download</label>
+      </div>
+      <div class="note" id="phFit"></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <button id="phGo" disabled>📸 Photo sheet banao</button>
+        <button class="sec" id="phDown" disabled>&#11015; Download PDF</button>
+        <button class="sec" id="phOpen" disabled>&#8599; Naye tab me kholo</button>
+        <button class="sec" id="phClear" type="button">🗑 Sab hatao</button>
+        <a id="phLink" href="#" download="photos.pdf" class="hide"></a>
+        <span id="phStatus" style="color:var(--mut);font-size:13.5px"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span>Preview</span></h2>
+      <div id="phOne"></div>
+      <div id="phPreview"></div>
+    </div>
+  </div><!-- /photoView -->
+
+  <footer>Aapki files kahin upload nahi hoti &mdash; sab kuch aapke browser me hota hai.</footer>
+</div>
+
+<canvas id="fx"></canvas>
+<div id="congrats"><b>🎉 Congratulations bhai! 🎉</b><span>Auto crop ho gaya, A4 PDF taiyaar hai</span></div>
+
+<div id="mnModal" class="modal hide">
+  <div class="mbox">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <b id="mnTitle" style="font-size:15px"></b>
+      <div class="row"><button class="sec sm" id="mnPrev">◀</button><span id="mnPg" style="font-size:13px;color:var(--mut)"></span><button class="sec sm" id="mnNext">▶</button></div>
+    </div>
+    <div id="mnHint"></div>
+    <div class="mnwrap"><canvas id="mnCv"></canvas></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="sec" id="mnRedo">Dobara select</button>
+      <button class="sec" id="mnCancel">Cancel</button>
+      <button id="mnDone" disabled>A4 me lagao</button>
+    </div>
+  </div>
+</div>
+
+<div id="pwModal" class="modal hide">
+  <div class="mbox">
+    <div class="k"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <div id="pwMsg" style="font-size:14px"></div>
+    <input type="password" id="pwInp" placeholder="PDF password" autocomplete="off" />
+    <div class="row" style="justify-content:flex-end">
+      <button class="sec" id="pwCancel">Skip</button>
+      <button id="pwOk">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const $ = id => document.getElementById(id);
+const A4W = 595.28, A4H = 841.89, MM = 72 / 25.4;
+const D = 2; // detection render scale
+
+/* ---------- document types ---------- */
+const TYPES = {
+  aadhaar:  { label: "Aadhaar",         c: "#ff9a4d" },
+  pan:      { label: "PAN",             c: "#2dd4bf" },
+  voter:    { label: "Voter ID",        c: "#f472b6" },
+  dl:       { label: "Driving Licence", c: "#60a5fa" },
+  rc:       { label: "RC (Vehicle)",    c: "#c084fc" },
+  ayushman: { label: "Ayushman",        c: "#4ade80" },
+  unknown:  { label: "Document",        c: "#94a3b8" }
+};
+const TYPE_ORDER = ["aadhaar", "pan", "voter", "dl", "rc", "ayushman", "unknown"];
+
+function detectType(txt) {
+  if (/Ayushman|आयुष्मान|PM-?JAY/i.test(txt)) return "ayushman";
+  if (/income\s*tax\s*department|permanent\s+account\s+number/i.test(txt)) return "pan";
+  if (/election\s+commission|elector|\bEPIC\b|निर्वाचन/i.test(txt)) return "voter";
+  if (/driving\s+licen[cs]e|\bDL\s*No|ड्राइविंग|Licen[cs]e\s*No/i.test(txt)) return "dl";
+  if (/registration\s+certificate|certificate\s+of\s+registration|Regn\.?\s*No|Registration\s*No|Chassis/i.test(txt)) return "rc";
+  if (/Unique\s+Identification\s+Authority|UIDAI|Aadhaar|आधार/i.test(txt)) return "aadhaar";
+  return "unknown";
+}
+function badge(type) {
+  const t = TYPES[type] || TYPES.unknown;
+  const b = document.createElement("span");
+  b.className = "badge"; b.textContent = t.label;
+  b.style.cssText = `color:${t.c};border-color:${t.c}55;background:${t.c}18`;
+  return b;
+}
+// upload box ke neeche supported types
+TYPE_ORDER.slice(0, 6).forEach(k => { const c = document.createElement("span"); c.className = "chip"; c.textContent = TYPES[k].label; c.style.cssText = `color:${TYPES[k].c};border-color:${TYPES[k].c}55;background:${TYPES[k].c}14`; $("chips").appendChild(c); });
+
+/* ---------- state ---------- */
+let items = [];   // {id,name,size,pdf,bytes,locked,type,pages:[{pageNo,boxes:[...]}]}
+let outBytes = null, busy = false, wantAuto = false, blobUrl = null, uid = 0;
+
+function setStatus(s) { $("status").textContent = s; }
+function setBusy(on) { $("bar").classList.toggle("busy", on); if (!on) $("barfill").style.width = "0"; }
+function setProgress(f) { $("bar").classList.remove("busy"); $("barfill").style.width = Math.round(f * 100) + "%"; }
+function setSteps() {
+  $("st2").classList.toggle("on", items.length > 0);
+  $("st3").classList.toggle("on", !!outBytes);
+}
+
+/* ---------- controls wiring ---------- */
+$("th").oninput = () => $("tv").textContent = $("th").value;
+$("minpct").oninput = () => $("mv").textContent = $("minpct").value;
+$("dark").oninput = () => $("dv").textContent = $("dark").value;
+let t;
+["cw", "chh", "hmode", "qmode", "gp", "rgp", "tm", "xs", "scale", "dark", "autosort"].forEach(id => $(id).onchange = () => { if (items.length) build(); });
+["th", "minpct", "split", "ctype", "a_top", "a_ml", "a_mr", "autoorder"].forEach(id => $(id).onchange = () => { clearTimeout(t); t = setTimeout(redetect, 250); });
+
+const drop = $("drop"), fileInp = $("file");
+drop.onclick = () => fileInp.click();
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); addFiles(e.dataTransfer.files); };
+fileInp.onchange = () => { addFiles(fileInp.files); fileInp.value = ""; };
+$("clear").onclick = () => {
+  items = []; outBytes = null; renderList();
+  $("outCard").classList.add("hide"); $("go").disabled = true; setStatus(""); setSteps();
+};
+$("go").onclick = () => { wantAuto = true; build(); };
+
+function setBlob() {
+  if (blobUrl) URL.revokeObjectURL(blobUrl);
+  blobUrl = URL.createObjectURL(new Blob([outBytes], { type: "application/pdf" }));
+  $("dlink").href = blobUrl;
+}
+function doDownload() { if (outBytes && blobUrl) $("dlink").click(); }
+$("dl").onclick = doDownload;
+$("opentab").onclick = () => { if (blobUrl) window.open(blobUrl, "_blank"); };
+
+/* ---------- detection helpers ---------- */
+function bands(arr, minGap) {
+  const out = []; let s = -1, last = -1;
+  for (let i = 0; i < arr.length; i++) {
+    if (!arr[i]) continue;
+    if (s < 0) s = i;
+    else if (i - last - 1 >= minGap) { out.push([s, last]); s = i; }
+    last = i;
+  }
+  if (s >= 0) out.push([s, last]);
+  return out;
+}
+
+const BACK_RE = /information|instruction|सूचना|वरदान|please\s+contact|if\s+found|terms|conditions|endorsement|emergency|help@|\b1947\b|toll|customer\s+care/gi;
+const FRONT_RE = /\bname\b|नाम|\bDOB\b|date\s+of\s+birth|जन्म|father|holder|signature|photo|licen[cs]e\s*no|\bDL\s*No|regn|registration\s*no|enrol/gi;
+const backScore = txt => ((txt.match(BACK_RE) || []).length) - ((txt.match(FRONT_RE) || []).length);
+
+async function analyzePage(page, pageNo) {
+  const Dp = pageScale(page); // bade page (jaise 2313x3274 pt) ke liye detection scale apne aap chhota
+  const vp = page.getViewport({ scale: Dp });
+  const W = Math.ceil(vp.width), H = Math.ceil(vp.height);
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+
+  const ctype = $("ctype").value;
+  const th = +$("th").value, split = $("split").checked && ctype !== "aadhaar", minPct = +$("minpct").value / 100;
+  const d = ctx.getImageData(0, 0, W, H).data;
+  const isInk = i => d[i] < th || d[i + 1] < th || d[i + 2] < th;
+
+  const rowHas = new Uint8Array(H);
+  for (let y = 0; y < H; y++) {
+    const o = y * W * 4;
+    for (let x = 0; x < W; x++) if (isInk(o + x * 4)) { rowHas[y] = 1; break; }
+  }
+  const rGap = split ? Math.max(3, Math.round(H * 0.012)) : Infinity;
+  const cGap = split ? Math.max(4, Math.round(W * 0.015)) : Infinity;
+
+  let rows = [];
+  for (const [y0, y1] of bands(rowHas, rGap)) {
+    const colHas = new Uint8Array(W);
+    for (let y = y0; y <= y1; y++) {
+      const o = y * W * 4;
+      for (let x = 0; x < W; x++) if (!colHas[x] && isInk(o + x * 4)) colHas[x] = 1;
+    }
+    const rb = [];
+    for (const [x0, x1] of bands(colHas, cGap)) {
+      let ty0 = -1, ty1 = -1;
+      for (let y = y0; y <= y1; y++) {
+        const o = y * W * 4; let has = false;
+        for (let x = x0; x <= x1; x++) if (isInk(o + x * 4)) { has = true; break; }
+        if (has) { if (ty0 < 0) ty0 = y; ty1 = y; }
+      }
+      rb.push({ x: x0, y: ty0, w: x1 - x0 + 1, h: ty1 - ty0 + 1, on: true, page, pageNo, vp });
+    }
+    rows.push(rb);
+  }
+  // chhote items hatao (jaise "Card Generated on" wali line)
+  let maxA = 0;
+  rows.forEach(r => r.forEach(b => maxA = Math.max(maxA, b.w * b.h)));
+  rows = rows.map(r => r.filter(b => b.w * b.h >= minPct * maxA)).filter(r => r.length);
+
+  // text (document type + front/back pehchan ke liye)
+  let tcItems = [];
+  try { tcItems = (await page.getTextContent()).items; } catch (e) { /* image-only PDF */ }
+  const txt = tcItems.map(i => i.str).join(" ");
+
+  let aad = ctype === "aadhaar";
+  if (ctype === "auto" && rows.length) {
+    if (detectType(txt) === "aadhaar") aad = true;
+    else if (!txt.trim()) {
+      let bg = null;
+      rows.forEach(r => r.forEach(b => { if (!bg || b.w * b.h > bg.w * bg.h) bg = b; }));
+      const ratio = bg.h / bg.w;
+      if (rows.length === 1 && rows[0].length === 1 && ratio > 1.15 && ratio < 1.45 && bg.w * bg.h > 0.4 * W * H) aad = true;
+    }
+  }
+
+  let boxes, ok = true;
+  if (aad && rows.length) {
+    // e-Aadhaar letter: neeche ke do cards (front + back)
+    let big = null;
+    rows.forEach(r => r.forEach(b => { if (!big || b.w * b.h > big.w * big.h) big = b; }));
+    const top = +$("a_top").value / 100, ml = +$("a_ml").value / 100, mr = +$("a_mr").value / 100;
+    let y = Math.round(big.y + big.h * top);
+    {
+      // kainchi wali dashed line dhundo, crop usi se shuru karo taaki upar ka border aaye
+      const ya = Math.max(0, Math.round(big.y + big.h * 0.70));
+      const yb = Math.min(H - 1, Math.round(big.y + big.h * 0.78));
+      const cnt = []; let best = 0;
+      for (let yy = ya; yy <= yb; yy++) {
+        let cc = 0; const o = yy * W * 4;
+        for (let xx = big.x; xx < big.x + big.w; xx++) if (isInk(o + xx * 4)) cc++;
+        cnt.push(cc); if (cc > best) best = cc;
+      }
+      if (best > 0.35 * big.w) y = ya + cnt.findIndex(v => v >= 0.7 * best) - 2;
+    }
+    const h = big.y + big.h - y;
+    const front = { x: big.x, y, w: Math.round(big.w * ml), h, on: true, page, pageNo, vp, role: "Front" };
+    const bx = Math.round(big.x + big.w * mr);
+    const back = { x: bx, y, w: big.x + big.w - bx, h, on: true, page, pageNo, vp, role: "Back" };
+    boxes = [front, back];
+  } else {
+    // pehle card-shape dhundo (border wale card, aspect ~1.25-2.3); dashed lines, header, QR/table apne aap bahar
+    const cards = split ? findCards(d, W, H, th) : [];
+    if (cards.length) {
+      boxes = cards.map(k => ({ x: k.x, y: k.y, w: k.w, h: k.h, on: true, page, pageNo, vp }));
+    } else {
+      boxes = rows.flat();
+      const okGeneric = boxes.length >= 1 && boxes.length <= 2 && boxes.every(b => { const q = b.w / b.h; return q >= 1.2 && q <= 2.4; });
+      if (split && boxes.length && !okGeneric) ok = false; // card pehchana nahi gaya -> manual select
+    }
+    // har box ka text
+    const pts = tcItems.filter(i => i.str.trim()).map(i => {
+      const p = vp.convertToViewportPoint(i.transform[4], i.transform[5]);
+      return { x: p[0], y: p[1], s: i.str };
+    });
+    boxes.forEach(b => {
+      b.text = pts.filter(p => p.x >= b.x - 4 && p.x <= b.x + b.w + 4 && p.y >= b.y - 4 && p.y <= b.y + b.h + 4).map(p => p.s).join(" ");
+    });
+    // front pehle, back baad me
+    if ($("autoorder").checked && boxes.length === 2) {
+      const sa = backScore(boxes[0].text || ""), sb = backScore(boxes[1].text || "");
+      if (sa - sb >= 2) boxes.reverse();
+    }
+    if (boxes.length === 2) { boxes[0].role = "Front"; boxes[1].role = "Back"; }
+  }
+
+  // thumbnails
+  boxes.forEach(b => {
+    b.D = Dp;
+    const sc = Math.min(1, 230 / b.w);
+    const tc = document.createElement("canvas");
+    tc.width = Math.max(1, Math.round(b.w * sc)); tc.height = Math.max(1, Math.round(b.h * sc));
+    tc.getContext("2d").drawImage(c, b.x, b.y, b.w, b.h, 0, 0, tc.width, tc.height);
+    b.thumb = tc;
+  });
+  return { boxes, txt, aad, ok };
+}
+
+/* ---------- card finder: dilate -> connected components -> card-shaped frames ---------- */
+const pageScale = page => { const v = page.getViewport({ scale: 1 }); return Math.min(2, 2200 / Math.max(v.width, v.height)); };
+
+function findCards(d, W, H, th) {
+  const N = W * H;
+  const ink = new Uint8Array(N);
+  for (let i = 0, p = 0; i < N; i++, p += 4) ink[i] = (d[p] < th || d[p + 1] < th || d[p + 2] < th) ? 1 : 0;
+
+  const t = Math.max(3, Math.round(W * 0.005));
+  const bandH = (x0, x1, yy) => { let hit = 0; for (let x = x0; x <= x1; x++) { for (let k = 0; k < t; k++) { const y = yy + k; if (y >= 0 && y < H && ink[y * W + x]) { hit++; break; } } } return hit / (x1 - x0 + 1); };
+  const bandV = (y0, y1, xx) => { let hit = 0; for (let y = y0; y <= y1; y++) { for (let k = 0; k < t; k++) { const x = xx + k; if (x >= 0 && x < W && ink[y * W + x]) { hit++; break; } } } return hit / (y1 - y0 + 1); };
+
+  const tmp = new Uint8Array(N), dil = new Uint8Array(N), seen = new Uint8Array(N), stack = new Int32Array(N);
+  const pre = new Int32Array(Math.max(W, H) + 1);
+
+  // ek dilation radius par card-shaped frames
+  const pass = r => {
+    for (let y = 0; y < H; y++) {
+      const o = y * W; pre[0] = 0;
+      for (let x = 0; x < W; x++) pre[x + 1] = pre[x] + ink[o + x];
+      for (let x = 0; x < W; x++) tmp[o + x] = (pre[Math.min(W, x + r + 1)] - pre[Math.max(0, x - r)]) > 0 ? 1 : 0;
+    }
+    for (let x = 0; x < W; x++) {
+      pre[0] = 0;
+      for (let y = 0; y < H; y++) pre[y + 1] = pre[y] + tmp[y * W + x];
+      for (let y = 0; y < H; y++) dil[y * W + x] = (pre[Math.min(H, y + r + 1)] - pre[Math.max(0, y - r)]) > 0 ? 1 : 0;
+    }
+    seen.fill(0);
+    const res = [];
+    for (let s = 0; s < N; s++) {
+      if (!dil[s] || seen[s]) continue;
+      let sp = 0; stack[sp++] = s; seen[s] = 1;
+      let x0 = W, y0 = H, x1 = -1, y1 = -1;
+      while (sp) {
+        const i = stack[--sp], x = i % W, y = (i / W) | 0;
+        if (ink[i]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        if (x > 0 && dil[i - 1] && !seen[i - 1]) { seen[i - 1] = 1; stack[sp++] = i - 1; }
+        if (x < W - 1 && dil[i + 1] && !seen[i + 1]) { seen[i + 1] = 1; stack[sp++] = i + 1; }
+        if (y > 0 && dil[i - W] && !seen[i - W]) { seen[i - W] = 1; stack[sp++] = i - W; }
+        if (y < H - 1 && dil[i + W] && !seen[i + W]) { seen[i + W] = 1; stack[sp++] = i + W; }
+      }
+      if (x1 < 0) continue;
+      const w = x1 - x0 + 1, h = y1 - y0 + 1, ratio = w / h;
+      if (w < W * 0.18 || ratio < 1.3 || ratio > 2.05) continue;
+      // card ka kinara (border / rang) bhara hona chahiye; text/table ke area ka nahi hota
+      const edge = (bandH(x0, x1, y0) + bandH(x0, x1, y1 - t + 1) + bandV(y0, y1, x0) + bandV(y0, y1, x1 - t + 1)) / 4;
+      if (edge < 0.5) continue;
+      res.push({ x: x0, y: y0, w, h });
+    }
+    return res;
+  };
+
+  // chhota radius (border wale card) + thoda bada radius (jab card ke hisse aapas me alag ho gaye hon, jaise Ayushman ka front)
+  const r1 = Math.max(2, Math.round(W * 0.004)), r2 = Math.max(r1 + 2, Math.round(W * 0.009));
+  let all = pass(r1).concat(pass(r2));
+
+  const iou = (a, b) => {
+    const ix = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)), iy = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    const inter = ix * iy; return inter / (a.w * a.h + b.w * b.h - inter);
+  };
+  const uniq = [];
+  all.forEach(a => { if (!uniq.some(b => iou(a, b) > 0.8)) uniq.push(a); });
+  // andar ke chhote dabbe hatao
+  const c = uniq.filter((a, i) => !uniq.some((b, j) => j !== i && b.w * b.h > a.w * a.h && a.x >= b.x - 2 && a.y >= b.y - 2 && a.x + a.w <= b.x + b.w + 2 && a.y + a.h <= b.y + b.h + 2));
+  c.sort((a, b) => a.y - b.y);
+  const rows = [];
+  c.forEach(k => {
+    const row = rows.find(q => Math.abs((k.y + k.h / 2) - q.cy) < 0.5 * Math.min(k.h, q.h));
+    if (row) row.items.push(k); else rows.push({ cy: k.y + k.h / 2, h: k.h, items: [k] });
+  });
+  return rows.flatMap(q => q.items.sort((a, b) => a.x - b.x)).slice(0, 8);
+}
+
+async function analyzeItem(it) {
+  it.pages = []; it.badPages = []; it.manual = false;
+  let all = "", aadAny = false;
+  for (let n = 1; n <= it.pdf.numPages; n++) {
+    setStatus(`${it.name} — page ${n}/${it.pdf.numPages} detect ho raha hai...`);
+    const page = await it.pdf.getPage(n);
+    const r = await analyzePage(page, n);
+    all += " " + r.txt; if (r.aad) aadAny = true;
+    r.boxes.forEach(b => b.item = it);
+    if (r.boxes.length) { if (r.ok) it.pages.push({ pageNo: n, boxes: r.boxes }); else it.badPages.push(n); }
+  }
+  it.type = aadAny ? "aadhaar" : detectType(all);
+}
+
+/* ---------- password ---------- */
+function askPassword(msg) {
+  return new Promise(res => {
+    $("pwMsg").textContent = msg;
+    $("pwInp").value = "";
+    $("pwModal").classList.remove("hide");
+    setTimeout(() => $("pwInp").focus(), 50);
+    const done = v => {
+      $("pwModal").classList.add("hide");
+      $("pwOk").onclick = $("pwCancel").onclick = $("pwInp").onkeydown = null;
+      res(v);
+    };
+    $("pwOk").onclick = () => done($("pwInp").value);
+    $("pwCancel").onclick = () => done(null);
+    $("pwInp").onkeydown = e => { if (e.key === "Enter") done($("pwInp").value); };
+  });
+}
+
+// pdf.js ka onPassword callback: pehle NEED_PASSWORD (1), galat hone par INCORRECT_PASSWORD (2)
+function openPdf(bytes, name) {
+  return new Promise((resolve, reject) => {
+    const task = pdfjsLib.getDocument({ data: bytes.slice() });
+    let locked = false;
+    task.onPassword = async (update, reason) => {
+      locked = true;
+      const p = await askPassword(reason === 2
+        ? `"${name}" ka password galat hai. Sahi password daalo:`
+        : `"${name}" password-protected hai. Password daalo:`);
+      if (p === null) { try { task.destroy(); } catch (e) {} reject(new Error("PW_SKIP")); return; }
+      update(p);
+    };
+    task.promise.then(pdf => resolve({ pdf, locked }), reject);
+  });
+}
+
+async function addFiles(list) {
+  const arr = [...list].filter(f => f.type === "application/pdf" || /\.pdf$/i.test(f.name));
+  if (!arr.length) { setStatus("Sirf PDF files chuno."); return; }
+  setBusy(true);
+  let added = 0;
+  for (const f of arr) {
+    try {
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      const { pdf, locked } = await openPdf(bytes, f.name);
+      const it = { id: ++uid, name: f.name, size: f.size, pdf, bytes, locked, type: "unknown", pages: [] };
+      await analyzeItem(it);
+      items.push(it); added++;
+    } catch (e) {
+      console.error(e);
+      setStatus(e && e.message === "PW_SKIP"
+        ? `${f.name}: password nahi diya, skip kar diya.`
+        : `${f.name}: nahi khul paya (${(e && e.message) || "kharab PDF ho sakti hai"}).`);
+    }
+  }
+  setBusy(false);
+  renderList();
+  if (added) { wantAuto = true; await build(); }
+}
+
+async function redetect() {
+  if (!items.length) return;
+  setBusy(true);
+  for (const it of items) if (!it.manual) await analyzeItem(it);
+  setBusy(false);
+  renderList();
+  await build();
+}
+
+/* ---------- list UI ---------- */
+function swapPage(pg) { pg.boxes.reverse(); pg.boxes.forEach((b, i) => { if (pg.boxes.length === 2) b.role = i ? "Back" : "Front"; }); renderList(); build(); }
+
+function renderList() {
+  const box = $("list"); box.innerHTML = "";
+  items.forEach((it, idx) => {
+    const f = document.createElement("div"); f.className = "file";
+    const h = document.createElement("div"); h.className = "fhead";
+    const nm = document.createElement("div"); nm.className = "nm"; nm.textContent = it.name; nm.title = it.name;
+    const meta = document.createElement("span"); meta.className = "meta"; meta.textContent = (it.size / 1024).toFixed(0) + " KB" + (it.locked ? " · 🔓 unlocked" : "");
+    const up = document.createElement("button"); up.className = "sec sm ico"; up.textContent = "▲"; up.disabled = idx === 0;
+    up.onclick = () => { [items[idx - 1], items[idx]] = [items[idx], items[idx - 1]]; renderList(); build(); };
+    const dn = document.createElement("button"); dn.className = "sec sm ico"; dn.textContent = "▼"; dn.disabled = idx === items.length - 1;
+    dn.onclick = () => { [items[idx + 1], items[idx]] = [items[idx], items[idx + 1]]; renderList(); build(); };
+    const rm = document.createElement("button"); rm.className = "sec sm"; rm.textContent = "Hatao";
+    rm.onclick = () => { items.splice(idx, 1); renderList(); items.length ? build() : $("clear").onclick(); };
+    const bad = it.badPages && it.badPages.length;
+    const ms = document.createElement("button"); ms.className = (bad ? "warn" : "sec") + " sm"; ms.textContent = "✂ Manual select";
+    ms.onclick = () => openManual(it, (it.badPages && it.badPages[0]) || (it.pages[0] && it.pages[0].pageNo) || 1);
+    h.append(badge(it.type), nm, meta, ms, up, dn, rm); f.appendChild(h);
+
+    if (bad) {
+      const e = document.createElement("div"); e.className = "badnote";
+      e.textContent = `⚠ A4 PDF sahi nahi mil paayi (page ${it.badPages.join(", ")}). "✂ Manual select" dabao: pehle Front card, phir Back card drag karke chuno.`;
+      f.appendChild(e);
+    } else if (!it.pages.length) { const e = document.createElement("div"); e.className = "hint"; e.textContent = "Koi content nahi mila."; f.appendChild(e); }
+    it.pages.forEach(pg => {
+      const set = document.createElement("div"); set.className = "set";
+      pg.boxes.forEach((b, i) => {
+        const th = document.createElement("div"); th.className = "thumb" + (b.on ? "" : " off");
+        th.appendChild(b.thumb);
+        const no = document.createElement("div"); no.className = "no"; no.textContent = i + 1; th.appendChild(no);
+        if (b.role) { const fb = document.createElement("div"); fb.className = "fb"; fb.textContent = b.role; th.appendChild(fb); }
+        th.onclick = () => { b.on = !b.on; th.classList.toggle("off", !b.on); build(); };
+        set.appendChild(th);
+      });
+      if (pg.boxes.length >= 2) {
+        const sw = document.createElement("button"); sw.className = "sec sm"; sw.textContent = "⇄ Front/Back badlo";
+        sw.onclick = () => swapPage(pg);
+        set.appendChild(sw);
+      }
+      f.appendChild(set);
+    });
+    box.appendChild(f);
+  });
+  $("listCard").classList.toggle("hide", !items.length);
+  $("go").disabled = !items.length;
+  updateAlert();
+  setSteps();
+}
+
+function updateAlert() {
+  const bad = items.filter(it => it.badPages && it.badPages.length);
+  $("alertBar").classList.toggle("hide", !bad.length);
+  if (!bad.length) return;
+  $("alertTxt").textContent = bad.map(it => `${it.name} (page ${it.badPages.join(", ")})`).join(" · ")
+    + " — card ka front/back auto detect nahi ho paaya. 'Manual select' dabao, PDF page par pehle Front card, phir Back card drag karke chuno; tool wahi hissa dhundh kar A4 me laga dega.";
+  $("alertBtn").onclick = () => openManual(bad[0], bad[0].badPages[0]);
+}
+
+/* ---------- Manual select (screenshot jaisa): pehle Front, phir Back drag karke chuno ---------- */
+const MN = { it: null, pageNo: 1, bg: null, page: null, vp: null, Dp: 1, sel: [null, null], step: 0, drag: null };
+const MN_COL = ["#ff8a5c", "#6f8dff"], MN_NAME = ["FRONT", "BACK"];
+
+async function openManual(it, pageNo) {
+  MN.it = it; MN.pageNo = Math.min(Math.max(1, pageNo || 1), it.pdf.numPages);
+  $("mnModal").classList.remove("hide");
+  document.body.style.overflow = "hidden";
+  await mnLoad();
+}
+function closeManual() { $("mnModal").classList.add("hide"); document.body.style.overflow = ""; }
+async function mnLoad() {
+  const it = MN.it;
+  $("mnTitle").textContent = it.name;
+  $("mnPg").textContent = `Page ${MN.pageNo}/${it.pdf.numPages}`;
+  $("mnPrev").disabled = MN.pageNo <= 1; $("mnNext").disabled = MN.pageNo >= it.pdf.numPages;
+  $("mnHint").textContent = "Page load ho raha hai...";
+  const page = await it.pdf.getPage(MN.pageNo);
+  const Dp = pageScale(page), vp = page.getViewport({ scale: Dp });
+  const bg = document.createElement("canvas"); bg.width = Math.ceil(vp.width); bg.height = Math.ceil(vp.height);
+  const bx = bg.getContext("2d", { willReadFrequently: true });
+  bx.fillStyle = "#fff"; bx.fillRect(0, 0, bg.width, bg.height);
+  await page.render({ canvasContext: bx, viewport: vp }).promise;
+  Object.assign(MN, { page, vp, Dp, bg, sel: [null, null], step: 0, drag: null });
+  const cv = $("mnCv"); cv.width = bg.width; cv.height = bg.height;
+  mnDraw();
+}
+function mnDraw() {
+  const cv = $("mnCv"), ctx = cv.getContext("2d");
+  ctx.drawImage(MN.bg, 0, 0);
+  const lw = Math.max(3, cv.width / 300), fs = Math.max(16, cv.width / 45);
+  const paint = (r, i) => {
+    ctx.save();
+    ctx.fillStyle = MN_COL[i] + "30"; ctx.fillRect(r.x, r.y, r.w, r.h);
+    ctx.strokeStyle = MN_COL[i]; ctx.lineWidth = lw; ctx.strokeRect(r.x, r.y, r.w, r.h);
+    ctx.fillStyle = MN_COL[i]; ctx.font = `700 ${fs}px sans-serif`; ctx.textBaseline = "bottom";
+    ctx.fillText(MN_NAME[i], r.x + 4, Math.max(fs + 2, r.y - 4));
+    ctx.restore();
+  };
+  MN.sel.forEach((r, i) => { if (r) paint(r, i); });
+  if (MN.drag) paint(MN.drag, Math.min(MN.step, 1));
+  $("mnHint").textContent = MN.step === 0 ? "1️⃣ Pehle FRONT card par mouse/ungli se drag karke box banao"
+    : MN.step === 1 ? "2️⃣ Ab BACK card select karo (back nahi hai to seedha 'A4 me lagao' dabao)"
+    : "✅ Front aur Back select ho gaye — 'A4 me lagao' dabao (ya 'Dobara select')";
+  $("mnDone").disabled = !MN.sel[0];
+}
+const mnPos = e => {
+  const cv = $("mnCv"), r = cv.getBoundingClientRect();
+  return { x: Math.max(0, Math.min(cv.width, (e.clientX - r.left) * cv.width / r.width)), y: Math.max(0, Math.min(cv.height, (e.clientY - r.top) * cv.height / r.height)) };
+};
+// selection ke andar ka asli card dhundh kar kinare kas do (dashed line ya khali jagah hat jati hai)
+function mnTighten(r) {
+  const th = +$("th").value;
+  const x0 = Math.floor(r.x), y0 = Math.floor(r.y), w = Math.max(1, Math.floor(r.w)), h = Math.max(1, Math.floor(r.h));
+  const d = MN.bg.getContext("2d").getImageData(x0, y0, w, h).data;
+  let a = w, b = h, c = -1, e = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4;
+    if (d[i] < th || d[i + 1] < th || d[i + 2] < th) { if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > e) e = y; }
+  }
+  if (c < 0) return { x: x0, y: y0, w, h };
+  const t = { x: x0 + a, y: y0 + b, w: c - a + 1, h: e - b + 1 };
+  return (t.w * t.h >= 0.5 * w * h) ? t : { x: x0, y: y0, w, h };
+}
+$("mnCv").onpointerdown = e => {
+  if (MN.step >= 2) return;
+  $("mnCv").setPointerCapture(e.pointerId);
+  const p = mnPos(e); MN.drag = { x0: p.x, y0: p.y, x: p.x, y: p.y, w: 0, h: 0 };
+};
+$("mnCv").onpointermove = e => {
+  if (!MN.drag) return;
+  const p = mnPos(e), g = MN.drag;
+  g.x = Math.min(g.x0, p.x); g.y = Math.min(g.y0, p.y); g.w = Math.abs(p.x - g.x0); g.h = Math.abs(p.y - g.y0);
+  mnDraw();
+};
+$("mnCv").onpointerup = () => {
+  if (!MN.drag) return;
+  const g = MN.drag; MN.drag = null;
+  if (g.w > 20 && g.h > 20) { MN.sel[MN.step] = mnTighten(g); MN.step++; }
+  mnDraw();
+};
+$("mnRedo").onclick = () => { MN.sel = [null, null]; MN.step = 0; MN.drag = null; mnDraw(); };
+$("mnCancel").onclick = closeManual;
+$("mnPrev").onclick = () => { if (MN.pageNo > 1) { MN.pageNo--; mnLoad(); } };
+$("mnNext").onclick = () => { if (MN.pageNo < MN.it.pdf.numPages) { MN.pageNo++; mnLoad(); } };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("mnModal").classList.contains("hide")) closeManual(); });
+$("mnDone").onclick = () => {
+  const it = MN.it; if (!MN.sel[0]) return;
+  const mk = (r, role) => {
+    const sc = Math.min(1, 230 / r.w);
+    const tc = document.createElement("canvas"); tc.width = Math.max(1, Math.round(r.w * sc)); tc.height = Math.max(1, Math.round(r.h * sc));
+    tc.getContext("2d").drawImage(MN.bg, r.x, r.y, r.w, r.h, 0, 0, tc.width, tc.height);
+    return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.w), h: Math.round(r.h), on: true, page: MN.page, pageNo: MN.pageNo, vp: MN.vp, D: MN.Dp, item: it, thumb: tc, role };
+  };
+  const boxes = [mk(MN.sel[0], "Front")]; if (MN.sel[1]) boxes.push(mk(MN.sel[1], "Back"));
+  it.pages = it.pages.filter(p => p.pageNo !== MN.pageNo);
+  it.pages.push({ pageNo: MN.pageNo, boxes }); it.pages.sort((a, b) => a.pageNo - b.pageNo);
+  it.badPages = (it.badPages || []).filter(n => n !== MN.pageNo);
+  it.manual = true;
+  closeManual(); renderList(); wantAuto = true; build();
+};
+
+/* ---------- build ---------- */
+async function renderBox(b, S, pad) {
+  const Dp = b.D || 2;
+  const Se = Math.max(Dp, Math.min(S, 2600 / Math.max(1, b.w / Dp))); // card ~2600px se bada nahi (bade page par memory bachti hai)
+  const k = Se / Dp;
+  const vp = b.page.getViewport({ scale: Se });
+  const x = Math.max(0, Math.floor((b.x - pad) * k)), y = Math.max(0, Math.floor((b.y - pad) * k));
+  const x2 = Math.min(Math.ceil(vp.width), Math.ceil((b.x + b.w + pad) * k));
+  const y2 = Math.min(Math.ceil(vp.height), Math.ceil((b.y + b.h + pad) * k));
+  const c = document.createElement("canvas"); c.width = x2 - x; c.height = y2 - y;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+  await b.page.render({ canvasContext: ctx, viewport: vp, transform: [1, 0, 0, 1, -x, -y] }).promise;
+  return c;
+}
+
+let rebuild = false;
+async function build() {
+  if (busy) { rebuild = true; return; }
+  let order = items.slice();
+  if ($("autosort").checked) order.sort((a, b) => TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type)); // stable
+  const sets = [];
+  order.forEach(it => it.pages.forEach(p => { const on = p.boxes.filter(b => b.on); if (on.length) sets.push(on); }));
+  if (!sets.length) {
+    setStatus(items.some(it => it.badPages && it.badPages.length)
+      ? "A4 PDF sahi nahi mil paayi — 'Manual select' se front aur back khud chuno."
+      : "Output ke liye koi card select nahi hai.");
+    return;
+  }
+
+  busy = true; $("go").disabled = true;
+  try {
+    const { PDFDocument } = PDFLib;
+    const S = +$("scale").value;
+    const sideMin = 5 * MM;
+    const cardW = Math.min(+$("cw").value * MM, A4W - 2 * sideMin);
+    const gap = (+$("gp").value || 0) * MM;
+    const rgap = (+$("rgp").value || 0) * MM;
+    const xshift = (+$("xs").value || 0) * MM;
+    const top = (+$("tm").value || 0) * MM;
+    const bottomMin = 5 * MM;
+    const fixed = $("hmode").value === "fixed";
+    const cardH = (+$("chh").value || 54.7) * MM;
+    const qmode = $("qmode").value;
+    const dark = +$("dark").value;
+
+    const doc = await PDFDocument.create();
+    const srcCache = new Map();
+    const getSrc = async it => {
+      if (!srcCache.has(it)) srcCache.set(it, await PDFDocument.load(it.bytes, { ignoreEncryption: true }));
+      return srcCache.get(it);
+    };
+    const laid = [];
+    let n = 0; const total = sets.reduce((a, r) => a + r.length, 0);
+    for (const r of sets) {
+      const row = [];
+      for (const b of r) {
+        n++; setStatus(`Card ${n}/${total} ban raha hai...`); setProgress(n / (total + 1));
+        let ent = null;
+        // locked (encrypted) PDF me vector crop nahi chalta, wo high-quality image banegi
+        if (qmode === "vec" && dark === 0 && !b.item.locked) {
+          try {
+            const src = await getSrc(b.item);
+            const sp = src.getPage(b.pageNo - 1);
+            if (sp.getRotation().angle !== 0) throw new Error("rotated page");
+            const pad = 2;
+            const p1 = b.vp.convertToPdfPoint(b.x - pad, b.y - pad);
+            const p2 = b.vp.convertToPdfPoint(b.x + b.w + pad, b.y + b.h + pad);
+            const bbox = { left: Math.min(p1[0], p2[0]), right: Math.max(p1[0], p2[0]), bottom: Math.min(p1[1], p2[1]), top: Math.max(p1[1], p2[1]) };
+            const emb = await doc.embedPage(sp, bbox);
+            ent = { draw: (pg, x, y, w, h) => pg.drawPage(emb, { x, y, width: w, height: h }), ratio: (bbox.top - bbox.bottom) / (bbox.right - bbox.left) };
+          } catch (e) { console.warn("vector fallback -> image", e); }
+        }
+        if (!ent) {
+          const c = await renderBox(b, Math.max(S, 4), 2);
+          if (dark > 0) {
+            const g = 1 + (dark / 100) * 3;
+            const lut = new Uint8Array(256);
+            for (let i = 0; i < 256; i++) lut[i] = Math.round(255 * Math.pow(i / 255, g));
+            const cx = c.getContext("2d");
+            const im = cx.getImageData(0, 0, c.width, c.height), px = im.data;
+            for (let i = 0; i < px.length; i += 4) { px[i] = lut[px[i]]; px[i + 1] = lut[px[i + 1]]; px[i + 2] = lut[px[i + 2]]; }
+            cx.putImageData(im, 0, 0);
+          }
+          const blob = await new Promise(res => c.toBlob(res, "image/png"));
+          const img = await doc.embedPng(new Uint8Array(await blob.arrayBuffer()));
+          ent = { draw: (pg, x, y, w, h) => pg.drawImage(img, { x, y, width: w, height: h }), ratio: c.height / c.width };
+        }
+        ent.h = fixed ? cardH : cardW * ent.ratio;
+        row.push(ent);
+      }
+      laid.push(row);
+    }
+
+    // ek PDF page ke cards ek hi row me (front | back), row full ho to agla
+    const capCols = Math.max(1, Math.floor((A4W - 2 * sideMin + gap) / (cardW + gap)));
+    const cols = Math.min(capCols, Math.max(...laid.map(r => r.length)));
+    const x0 = (A4W - (cols * cardW + (cols - 1) * gap)) / 2 + xshift;
+
+    let page = doc.addPage([A4W, A4H]), cursor = A4H - top;
+    for (const row of laid) {
+      for (let i = 0; i < row.length; i += cols) {
+        const chunk = row.slice(i, i + cols);
+        const rowH = Math.max(...chunk.map(c => c.h));
+        if (cursor - rowH < bottomMin && cursor !== A4H - top) { page = doc.addPage([A4W, A4H]); cursor = A4H - top; }
+        chunk.forEach((c, j) => c.draw(page, x0 + j * (cardW + gap), cursor - c.h, cardW, c.h));
+        cursor -= rowH + rgap;
+      }
+    }
+
+    outBytes = await doc.save();
+    await showOut(outBytes);
+    setProgress(1);
+    $("ctaT").textContent = "A4 PDF taiyaar hai";
+    $("ctaS").textContent = `${total} card · ${doc.getPageCount()} A4 page · ${(outBytes.length / 1024).toFixed(0)} KB`;
+    setStatus(`Ho gaya: ${total} card → ${doc.getPageCount()} A4 page`);
+    setBlob(); setSteps();
+    if (wantAuto && !items.some(it => it.badPages && it.badPages.length)) celebrate();
+    if ($("auto").checked && wantAuto) doDownload();
+    wantAuto = false;
+  } catch (e) {
+    console.error(e);
+    setStatus("Error: " + (e.message || e));
+  } finally {
+    busy = false; $("go").disabled = !items.length;
+    if (rebuild) { rebuild = false; build(); }
+  }
+}
+
+/* ---------- success: phool barsha ---------- */
+let fxRun = 0;
+function celebrate() {
+  const cv = $("fx"), ctx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const run = ++fxRun;
+  const em = ["🌸", "🌼", "🌺", "🌹", "💐", "🏵️", "🌷", "✨"];
+  const N = Math.min(140, Math.round(innerWidth / 9));
+  const P = Array.from({ length: N }, () => ({
+    x: Math.random() * innerWidth, y: -30 - Math.random() * innerHeight * 0.9,
+    s: 16 + Math.random() * 22, vy: 1.6 + Math.random() * 2.6,
+    sw: Math.random() * Math.PI * 2, sa: 0.6 + Math.random() * 1.4,
+    r: Math.random() * Math.PI * 2, vr: (Math.random() - .5) * 0.08,
+    e: em[Math.floor(Math.random() * em.length)]
+  }));
+  const msg = $("congrats");
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 3800);
+  const t0 = performance.now();
+  (function frame(now) {
+    if (run !== fxRun) return;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    const el = now - t0; let alive = 0;
+    P.forEach(p => {
+      p.y += p.vy; p.sw += 0.03; p.x += Math.sin(p.sw) * p.sa; p.r += p.vr;
+      if (p.y < innerHeight + 40) alive++;
+      ctx.save();
+      ctx.globalAlpha = el > 4200 ? Math.max(0, 1 - (el - 4200) / 1200) : 1;
+      ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.font = p.s + "px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(p.e, 0, 0);
+      ctx.restore();
+    });
+    if (alive && el < 5400) requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, innerWidth, innerHeight);
+  })(t0);
+}
+
+/* ---------- Card Customization view ---------- */
+const STEPPERS = [
+  { id: "gp",  label: "Card ke beech gap (side me)",   hint: "Front aur Back ke beech ki doori (mm)", step: 0.5, min: 0,   max: 30, def: 3.2 },
+  { id: "rgp", label: "Rows ke beech gap (upar-neeche)", hint: "Ek card row aur agli row ke beech (mm)", step: 0.5, min: 0,   max: 30, def: 3.2 },
+  { id: "tm",  label: "Upar ka margin",                 hint: "A4 ke top se pehli row tak (mm)",         step: 0.5, min: 0,   max: 50, def: 5 },
+  { id: "xs",  label: "Left / Right shift",             hint: "Poora layout side me khiskao (mm, − = left)", step: 0.5, min: -50, max: 50, def: 0 },
+  { id: "cw",  label: "Card width",                     hint: "mm",                                      step: 0.5, min: 20,  max: 200, def: 86.7 },
+  { id: "chh", label: "Card height",                    hint: "mm (Fixed size mode me lagta hai)",       step: 0.5, min: 20,  max: 200, def: 54.7 }
+];
+const round1 = v => Math.round(v * 10) / 10;
+let cTimer;
+function scheduleBuild() { clearTimeout(cTimer); cTimer = setTimeout(() => { if (items.length) build(); }, 250); }
+
+function buildSteppers() {
+  const g = $("cgrid"); g.innerHTML = "";
+  STEPPERS.forEach(s => {
+    const w = document.createElement("div"); w.className = "stp";
+    const lb = document.createElement("label"); lb.textContent = s.label;
+    const row = document.createElement("div"); row.className = "sr";
+    const minus = document.createElement("button"); minus.className = "sec"; minus.textContent = "−";
+    const plus = document.createElement("button"); plus.className = "sec"; plus.textContent = "+";
+    const inp = document.createElement("input"); inp.type = "number"; inp.step = s.step; inp.min = s.min; inp.max = s.max;
+    inp.value = $(s.id).value; inp.id = "c_" + s.id;
+    const apply = v => {
+      v = Math.min(s.max, Math.max(s.min, round1(+v || 0)));
+      inp.value = v; $(s.id).value = v; scheduleBuild();
+    };
+    minus.onclick = () => apply(+inp.value - s.step);
+    plus.onclick = () => apply(+inp.value + s.step);
+    inp.oninput = () => apply(inp.value);
+    row.append(minus, inp, plus);
+    const sm = document.createElement("small"); sm.textContent = s.hint;
+    w.append(lb, row, sm); g.appendChild(w);
+  });
+}
+function syncSteppers() { STEPPERS.forEach(s => { const i = $("c_" + s.id); if (i) i.value = $(s.id).value; }); }
+function copyPreview() {
+  const src = $("outPreview"), dst = $("cPreview"); dst.innerHTML = "";
+  src.querySelectorAll("canvas").forEach(c => {
+    const n = document.createElement("canvas"); n.width = c.width; n.height = c.height;
+    n.getContext("2d").drawImage(c, 0, 0); dst.appendChild(n);
+  });
+  $("cWarn").classList.toggle("hide", !!outBytes);
+  $("cDl").disabled = !outBytes;
+  $("cStatus").textContent = outBytes ? $("ctaS").textContent : "";
+}
+/* ---------- views: main / Card Customization / Passport Photo ---------- */
+let inCust = false, curView = "main";
+function showView(v) {
+  curView = v; inCust = v === "cust";
+  $("mainView").classList.toggle("hide", v !== "main");
+  $("custView").classList.toggle("hide", v !== "cust");
+  $("photoView").classList.toggle("hide", v !== "photo");
+  $("custBtn").classList.toggle("back", v === "cust");
+  $("photoBtn").classList.toggle("back", v === "photo");
+  $("custIco").textContent = v === "cust" ? "←" : "🎛";
+  $("custTxt").textContent = v === "cust" ? "Back" : "Card Customization";
+  $("photoIco").textContent = v === "photo" ? "←" : "📸";
+  $("photoTxt").textContent = v === "photo" ? "Back" : "Passport Photo";
+  if (v === "cust") { syncSteppers(); copyPreview(); }
+  if (v === "photo") phSchedule();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+buildSteppers();
+$("custBtn").onclick = () => showView(curView === "cust" ? "main" : "cust");
+$("photoBtn").onclick = () => showView(curView === "photo" ? "main" : "photo");
+
+/* ====================== Passport Photo sheet ====================== */
+const PH = { ents: [], active: -1, nextId: 1, gen: 0, img: null, imgId: 0, timer: 0, busy: false, again: false, manual: false, url: null, bytes: null, srcCw: 0, seg: null, segFail: false, segCb: null, mask: null };
+const PSPEC = [
+  { id: "ph_n", e: 1, label: "Is photo ke kitne copy chahiye", hint: "Jaise 2, 4, 6 — ye photo itni baar lagegi",                       step: 1,   min: 1,  max: 200, def: 6 },
+  { id: "ph_per",  label: "Ek line me kitne photo",         hint: "Zyada ho to 7vaan agli line me aayega",              step: 1,   min: 1,  max: 12,  def: 6 },
+  { id: "ph_w", e: 1,    label: "Photo width (mm)",               hint: "Aapki sheet: 33 mm",                                  step: 0.5, min: 15, max: 100, def: 33 },
+  { id: "ph_h", e: 1,    label: "Photo height (mm)",              hint: "Aapki sheet: 43.2 mm",                                step: 0.5, min: 15, max: 130, def: 43.2 },
+  { id: "ph_top",  label: "Upar ka margin (mm)",            hint: "Page ke top se pehli line tak",                       step: 0.5, min: 0,  max: 60,  def: 3 },
+  { id: "ph_left", label: "Left margin (mm)",               hint: "Sirf tab, jab 'beech me rakho' band ho",              step: 0.5, min: 0,  max: 60,  def: 3.5 },
+  { id: "ph_cg",   label: "Photo ke beech gap — side (mm)", hint: "Ek photo se doosre photo tak",                        step: 0.5, min: 0,  max: 20,  def: 1 },
+  { id: "ph_rg",   label: "Rows ke beech gap — upar-neeche (mm)", hint: "Ek line se agli line tak",                      step: 0.5, min: 0,  max: 20,  def: 1 }
+];
+const PSL = [
+  { id: "ph_zoom",  label: "Zoom",                  min: 100, max: 300, def: 100, unit: "%" },
+  { id: "ph_x",     label: "Photo left ◀ ▶ right",  min: -100, max: 100, def: 0 },
+  { id: "ph_y",     label: "Photo upar ▲ ▼ neeche", min: -100, max: 100, def: 0 },
+  { id: "ph_light", label: "Roshni (Lighting)",     min: -100, max: 100, def: 0 },
+  { id: "ph_con",   label: "Contrast",              min: -50,  max: 50,  def: 0 },
+  { id: "ph_sat",   label: "Rang (Saturation)",     min: -50,  max: 50,  def: 0 },
+  { id: "ph_warm",  label: "Warm ◀ ▶ Cool",         min: -30,  max: 30,  def: 0 },
+  { id: "ph_sharp", label: "Sharpness",             min: 0,    max: 100, def: 35 }
+];
+// background colour ke sliders
+const BSL = [
+  { id: "ph_soft",   label: "Kinara naram (Edge softness)",            min: 0,   max: 100, def: 35 },
+  { id: "ph_shrink", label: "Kinara: bahar ◀ ▶ andar (halo hatao)",   min: -10, max: 10,  def: 1 }
+];
+const BG_PRESETS = ["#ffffff", "#f2f2f2", "#d9d9d9", "#bcdcf5", "#4f9cf5", "#1e6fd9", "#0b3d91", "#e53935", "#d62828", "#f9c74f", "#43a047", "#8e24aa", "#f5e6c8", "#000000"];
+const pv = id => +$(id).value || 0; // sheet layout ke (sab ke liye) fields
+
+/* ---------- har photo (alag insaan) ki apni settings ---------- */
+const PH_INFO0 = "JPG / PNG / WEBP · jitni badi aur saaf photo, utni achhi quality";
+const E_IDS = ["ph_name", "ph_date", "ph_strip", "ph_auto", "ph_zoom", "ph_x", "ph_y", "ph_light", "ph_con", "ph_sat", "ph_warm", "ph_sharp", "ph_soft", "ph_shrink", "ph_bg_on", "ph_bg", "ph_n", "ph_w", "ph_h"];
+const E_BOOL = ["ph_auto", "ph_bg_on"];
+const E_INHERIT = ["ph_strip", "ph_auto", "ph_sharp", "ph_soft", "ph_shrink", "ph_bg_on", "ph_bg", "ph_n", "ph_w", "ph_h"]; // naya photo pichle se ye le leta hai
+let CTX = null; // abhi jis photo ko render kar rahe hain
+const EV = id => +CTX.s[id] || 0, ES = id => CTX.s[id];
+function phDefaults() {
+  const s = { ph_name: "", ph_date: "", ph_strip: "white", ph_auto: true, ph_bg_on: false, ph_bg: "#ffffff" };
+  PSL.concat(BSL).forEach(x => s[x.id] = x.def);
+  PSPEC.filter(x => x.e).forEach(x => s[x.id] = x.def);
+  return s;
+}
+function phReadForm() { const s = {}; E_IDS.forEach(id => { const el = $(id); s[id] = E_BOOL.includes(id) ? el.checked : el.value; }); return s; }
+function phWriteForm(s) {
+  E_IDS.forEach(id => { if (id === "ph_bg") return; const el = $(id); if (E_BOOL.includes(id)) el.checked = !!s[id]; else el.value = s[id]; });
+  PSL.concat(BSL).forEach(x => { $(x.id + "_v").textContent = $(x.id).value + (x.unit || ""); });
+  phSetColor(s.ph_bg, true);
+}
+function phSaveActive() { const e = PH.ents[PH.active]; if (e) e.s = phReadForm(); }
+function phSchedule() { phSaveActive(); phRenderChips(); clearTimeout(PH.timer); PH.timer = setTimeout(() => phBuild(false), 250); }
+
+(function buildPhotoUI() {
+  const g = $("phGrid");
+  PSPEC.forEach(s => {
+    const w = document.createElement("div"); w.className = "stp";
+    const lb = document.createElement("label"); lb.textContent = s.label;
+    const row = document.createElement("div"); row.className = "sr";
+    const minus = document.createElement("button"); minus.className = "sec"; minus.type = "button"; minus.textContent = "−";
+    const plus = document.createElement("button"); plus.className = "sec"; plus.type = "button"; plus.textContent = "+";
+    const inp = document.createElement("input"); inp.type = "number"; inp.step = "any"; inp.min = s.min; inp.max = s.max; inp.value = s.def; inp.id = s.id;
+    const apply = v => { v = Math.min(s.max, Math.max(s.min, Math.round(v * 10) / 10)); inp.value = v; phSchedule(); };
+    minus.onclick = () => apply((+inp.value || 0) - s.step);
+    plus.onclick = () => apply((+inp.value || 0) + s.step);
+    inp.oninput = phSchedule;
+    inp.onchange = () => apply(inp.value === "" ? s.def : +inp.value);
+    row.append(minus, inp, plus);
+    const sm = document.createElement("small"); sm.textContent = s.hint;
+    w.append(lb, row, sm); (s.e ? $("phEGrid") : g).appendChild(w);
+  });
+  const mkSliders = (arr, host) => arr.forEach(s => {
+    const w = document.createElement("div"); w.className = "sl";
+    const lb = document.createElement("label"); lb.innerHTML = `${s.label} <span id="${s.id}_v">${s.def}${s.unit || ""}</span>`;
+    const inp = document.createElement("input"); inp.type = "range"; inp.min = s.min; inp.max = s.max; inp.value = s.def; inp.id = s.id;
+    inp.oninput = () => { $(s.id + "_v").textContent = inp.value + (s.unit || ""); phSchedule(); };
+    w.append(lb, inp); host.appendChild(w);
+  });
+  mkSliders(PSL, $("phSl"));
+  mkSliders(BSL, $("phBgSl"));
+
+  ["ph_name", "ph_date"].forEach(id => $(id).oninput = phSchedule);
+  ["ph_strip", "ph_page", "ph_center", "ph_border", "ph_auto", "ph_bg_on"].forEach(id => $(id).onchange = phSchedule);
+  $("phToday").onclick = () => {
+    const d = new Date(), p = n => String(n).padStart(2, "0");
+    $("ph_date").value = `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`; phSchedule();
+  };
+  $("phReset").onclick = () => {
+    PSL.concat(BSL).forEach(s => { $(s.id).value = s.def; $(s.id + "_v").textContent = s.def + (s.unit || ""); });
+    $("ph_auto").checked = true; phSchedule();
+  };
+
+  /* --- background colour picker --- */
+  const sw = $("phSw");
+  BG_PRESETS.forEach(c => {
+    const i = document.createElement("i"); i.style.background = c; i.dataset.c = c; i.title = c.toUpperCase();
+    i.onclick = () => phSetColor(c);
+    sw.appendChild(i);
+  });
+  $("ph_bg").oninput = () => phSetColor($("ph_bg").value);
+  $("ph_hex").oninput = () => { const v = $("ph_hex").value.trim(); if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) phSetColor(v); };
+  ["ph_r", "ph_g", "ph_b"].forEach(id => $(id).oninput = () => {
+    const cl = v => Math.min(255, Math.max(0, Math.round(+v || 0)));
+    const h = n => cl(n).toString(16).padStart(2, "0");
+    phSetColor("#" + h($("ph_r").value) + h($("ph_g").value) + h($("ph_b").value));
+  });
+  if (window.EyeDropper) {
+    $("phEye").style.display = "";
+    $("phEye").onclick = async () => { try { const r = await new EyeDropper().open(); phSetColor(r.sRGBHex); } catch (e) { /* cancel */ } };
+  }
+  phSetColor("#ffffff", true);
+
+  const dz = $("phDrop"), fi = $("phFile");
+  dz.onclick = () => fi.click();
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add("over"); };
+  dz.ondragleave = () => dz.classList.remove("over");
+  dz.ondrop = e => { e.preventDefault(); dz.classList.remove("over"); if (e.dataTransfer.files.length) phAddFiles(e.dataTransfer.files); };
+  fi.onchange = () => { if (fi.files.length) phAddFiles(fi.files); fi.value = ""; };
+  $("phAdd").onclick = () => fi.click();
+  $("phGo").onclick = () => phBuild(true);
+  $("phDown").onclick = () => { if (PH.bytes && PH.url) $("phLink").click(); };
+  $("phOpen").onclick = () => { if (PH.url) window.open(PH.url, "_blank"); }; // bina download kiye naye tab me
+  $("phClear").onclick = phClearAll;
+})();
+
+// colour set karo: picker, R/G/B, hex aur swatches sab sync; rang chunte hi background apne aap ON
+function phSetColor(hex, silent) {
+  hex = (hex || "").trim(); if (hex[0] !== "#") hex = "#" + hex;
+  if (/^#[0-9a-f]{3}$/i.test(hex)) hex = "#" + hex.slice(1).split("").map(ch => ch + ch).join("");
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+  hex = hex.toLowerCase();
+  const n = parseInt(hex.slice(1), 16);
+  const setIf = (id, v) => { if (document.activeElement !== $(id)) $(id).value = v; };
+  $("ph_bg").value = hex;
+  setIf("ph_r", n >> 16); setIf("ph_g", (n >> 8) & 255); setIf("ph_b", n & 255); setIf("ph_hex", hex.toUpperCase());
+  document.querySelectorAll("#phSw i").forEach(s => s.classList.toggle("sel", s.dataset.c === hex));
+  if (silent) return;
+  $("ph_bg_on").checked = true;
+  phSchedule();
+}
+function phBgRGB() { const n = parseInt(String(ES("ph_bg")).slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+
+// Passport Photo ka sab kuch hatao: saari photo, name/date, banayi hui sheet, preview — bina F5 ke
+function phClearAll() {
+  PH.gen++; clearTimeout(PH.timer); PH.again = false; PH.manual = false;
+  PH.ents = []; PH.active = -1; PH.bytes = null;
+  if (PH.url) { URL.revokeObjectURL(PH.url); PH.url = null; }
+  $("phLink").href = "#";
+  $("phOne").innerHTML = ""; $("phPreview").innerHTML = ""; $("phChips").innerHTML = "";
+  $("phListCard").classList.add("hide"); $("phActiveTxt").textContent = "";
+  $("phInfo").textContent = PH_INFO0;
+  $("ph_name").value = ""; $("ph_date").value = ""; $("phFile").value = "";
+  ["ph_zoom", "ph_x", "ph_y"].forEach(id => { const s = PSL.find(q => q.id === id); $(id).value = s.def; $(id + "_v").textContent = s.def + (s.unit || ""); });
+  $("phGo").disabled = true; $("phDown").disabled = true; $("phOpen").disabled = true;
+  $("phFit").textContent = "";
+  $("phStatus").textContent = "Sab hat gaya ✓ — nayi photo upload karo";
+}
+
+function phThumb(img) {
+  try {
+    const sc = Math.min(1, 220 / img.naturalWidth), c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * sc)); c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    return c.toDataURL("image/jpeg", 0.8);
+  } catch (e) { return ""; }
+}
+
+function phRenderChips() {
+  const box = $("phChips"); if (!box) return;
+  box.innerHTML = "";
+  PH.ents.forEach((e, i) => {
+    const d = document.createElement("div"); d.className = "pchip" + (i === PH.active ? " on" : "");
+    const im = document.createElement("img"); im.src = e.thumbUrl; im.alt = "";
+    const nb = document.createElement("span"); nb.className = "n"; nb.textContent = i + 1;
+    const x = document.createElement("button"); x.type = "button"; x.className = "x"; x.textContent = "×"; x.title = "Ye photo hatao";
+    x.onclick = evt => { evt.stopPropagation(); phRemove(i); };
+    const t = document.createElement("div"); t.className = "t"; t.textContent = String(e.s.ph_name || "").trim() || `Photo ${i + 1}`;
+    const c = document.createElement("div"); c.className = "c"; c.textContent = `${Math.max(1, Math.round(+e.s.ph_n || 1))} copy · ${+e.s.ph_w || 0}×${+e.s.ph_h || 0} mm`;
+    d.append(im, nb, x, t, c);
+    d.onclick = () => { if (i !== PH.active) phSelect(i); };
+    box.appendChild(d);
+  });
+  $("phListCard").classList.toggle("hide", !PH.ents.length);
+  const a = PH.ents[PH.active];
+  $("phActiveTxt").textContent = a ? `abhi edit ho raha hai: Photo ${PH.active + 1} (${a.fileName})` : "";
+}
+
+function phSelect(i) { phSaveActive(); PH.active = i; phWriteForm(PH.ents[i].s); phRenderChips(); }
+
+function phRemove(i) {
+  phSaveActive();
+  const act = PH.ents[PH.active];
+  PH.ents.splice(i, 1);
+  if (!PH.ents.length) { phClearAll(); return; }
+  PH.active = PH.ents.includes(act) ? PH.ents.indexOf(act) : Math.min(i, PH.ents.length - 1);
+  phWriteForm(PH.ents[PH.active].s);
+  $("phInfo").textContent = `${PH.ents.length} photo jud chuki hain · aur jodne ke liye yahan dobara click/drag karo`;
+  phRenderChips(); phSchedule();
+}
+
+// ek ya kai photo jodo; har photo ek alag insaan (apna name, date, background, copy, size)
+async function phAddFiles(files) {
+  const arr = [...files].filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|bmp)$/i.test(f.name));
+  if (!arr.length) { $("phStatus").textContent = "Sirf photo (JPG/PNG/WEBP) chuno."; return; }
+  const gen = PH.gen; let added = 0;
+  for (const f of arr) {
+    const img = new Image(); img.src = URL.createObjectURL(f);
+    try { await img.decode(); } catch (e) { $("phStatus").textContent = `${f.name}: ye photo khul nahi paayi.`; continue; }
+    if (gen !== PH.gen) return; // beech me "Sab hatao" dab gaya
+    phSaveActive();
+    const prev = PH.ents[PH.ents.length - 1];
+    let s;
+    if (!prev) s = phReadForm(); // pehli photo: form me jo bhara hai wahi
+    else { s = phDefaults(); E_INHERIT.forEach(id => s[id] = prev.s[id]); s.ph_date = prev.s.ph_date; }
+    PH.ents.push({ id: PH.nextId++, img, fileName: f.name, thumbUrl: phThumb(img), mask: null, srcCw: 0, canvas: null, s });
+    PH.active = PH.ents.length - 1; phWriteForm(s); added++;
+  }
+  if (!added) return;
+  $("phInfo").textContent = `${PH.ents.length} photo jud chuki hain · aur jodne ke liye yahan dobara click/drag karo`;
+  $("phGo").disabled = false; $("phStatus").textContent = "";
+  phRenderChips(); phSchedule();
+}
+
+// photo ko kinare ke hisaab se crop + smooth resize (chhoti ho to dheere-dheere bada, badi ho to dheere-dheere chhota)
+function phResample(img, sx, sy, sw, sh, tw, th) {
+  let cur = document.createElement("canvas");
+  cur.width = Math.max(1, Math.round(sw)); cur.height = Math.max(1, Math.round(sh));
+  let cx = cur.getContext("2d"); cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = "high";
+  cx.drawImage(img, sx, sy, sw, sh, 0, 0, cur.width, cur.height);
+  for (let it = 0; it < 14; it++) {
+    const cw = cur.width, chh = cur.height; let nw, nh, last = false;
+    if (cw > tw * 2) { nw = Math.max(tw, Math.round(cw / 2)); nh = Math.max(th, Math.round(chh / 2)); }
+    else if (cw * 1.5 < tw) { nw = Math.min(tw, Math.round(cw * 1.5)); nh = Math.min(th, Math.round(chh * 1.5)); }
+    else { nw = tw; nh = th; last = true; }
+    const n = document.createElement("canvas"); n.width = nw; n.height = nh;
+    const nx = n.getContext("2d"); nx.imageSmoothingEnabled = true; nx.imageSmoothingQuality = "high";
+    nx.drawImage(cur, 0, 0, cw, chh, 0, 0, nw, nh);
+    cur = n; if (last) break;
+  }
+  return cur;
+}
+
+function phBoxBlur(d, w, h, r) {
+  const tmp = new Uint8ClampedArray(d.length), out = new Uint8ClampedArray(d.length), win = 2 * r + 1;
+  for (let y = 0; y < h; y++) {
+    const row = y * w * 4;
+    for (let c = 0; c < 3; c++) {
+      let sum = 0;
+      for (let x = -r; x <= r; x++) sum += d[row + Math.min(w - 1, Math.max(0, x)) * 4 + c];
+      for (let x = 0; x < w; x++) {
+        tmp[row + x * 4 + c] = sum / win;
+        sum += d[row + Math.min(w - 1, x + r + 1) * 4 + c] - d[row + Math.max(0, x - r) * 4 + c];
+      }
+    }
+  }
+  for (let x = 0; x < w; x++) {
+    for (let c = 0; c < 3; c++) {
+      let sum = 0;
+      for (let y = -r; y <= r; y++) sum += tmp[Math.min(h - 1, Math.max(0, y)) * w * 4 + x * 4 + c];
+      for (let y = 0; y < h; y++) {
+        out[y * w * 4 + x * 4 + c] = sum / win;
+        sum += tmp[Math.min(h - 1, y + r + 1) * w * 4 + x * 4 + c] - tmp[Math.max(0, y - r) * w * 4 + x * 4 + c];
+      }
+    }
+  }
+  return out;
+}
+
+function phEnhance(c) {
+  const ctx = c.getContext("2d", { willReadFrequently: true }), w = c.width, h = c.height;
+  const im = ctx.getImageData(0, 0, w, h), d = im.data, n = w * h;
+  let lo = 0, hi = 255, ex = 1;
+  if (ES("ph_auto")) {
+    const hist = new Uint32Array(256); let sum = 0;
+    for (let i = 0; i < d.length; i += 4) { const l = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0; hist[l]++; sum += l; }
+    const mean = sum / n;
+    const pct = p => { let a = 0; const t = n * p; for (let i = 0; i < 256; i++) { a += hist[i]; if (a >= t) return i; } return 255; };
+    const p1 = pct(0.01), p99 = pct(0.99);
+    const l2 = p1 * 0.7, h2 = 255 - (255 - p99) * 0.7;
+    if (h2 - l2 > 120) { lo = l2; hi = h2; }
+    const m2 = Math.min(1, Math.max(0, (mean - lo) / (hi - lo))) * 255;
+    if (m2 < 125) { const e = Math.min(1, Math.max(0.65, Math.log(125 / 255) / Math.log(Math.max(m2, 1) / 255))); ex = 1 - (1 - e) * 0.8; }
+    else if (m2 > 195) ex = 1 + Math.min(0.15, (m2 - 195) / 200);
+  }
+  const mex = Math.pow(2, -EV("ph_light") / 60), cf = 1 + EV("ph_con") / 100;
+  const lut = new Uint8Array(256);
+  for (let i = 0; i < 256; i++) {
+    let v = (i - lo) / (hi - lo); v = Math.min(1, Math.max(0, v));
+    v = Math.pow(v, ex); v = Math.pow(v, mex);
+    v = (v - 0.5) * cf + 0.5; v = Math.min(1, Math.max(0, v));
+    lut[i] = Math.round(v * 255);
+  }
+  const sf = 1 + EV("ph_sat") / 100, wm = EV("ph_warm") * 0.6;
+  for (let i = 0; i < d.length; i += 4) {
+    let r = lut[d[i]], g = lut[d[i + 1]], b = lut[d[i + 2]];
+    if (sf !== 1) { const l = 0.299 * r + 0.587 * g + 0.114 * b; r = l + (r - l) * sf; g = l + (g - l) * sf; b = l + (b - l) * sf; }
+    if (wm) { r += wm; b -= wm; }
+    d[i] = r; d[i + 1] = g; d[i + 2] = b;
+  }
+  const amt = EV("ph_sharp") / 100 * 1.1;
+  if (amt > 0) {
+    const bl = phBoxBlur(phBoxBlur(d, w, h, 2), w, h, 2);
+    for (let i = 0; i < d.length; i += 4) for (let k = 0; k < 3; k++) d[i + k] = d[i + k] + amt * (d[i + k] - bl[i + k]);
+  }
+  ctx.putImageData(im, 0, 0);
+}
+
+/* ---------- background change: insaan ka mask (AI) -> edge refine -> naya rang ---------- */
+const MP_BASE = "https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/";
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    const s = document.createElement("script"); s.src = src; s.crossOrigin = "anonymous";
+    s.onload = res; s.onerror = () => rej(new Error("script load fail")); document.head.appendChild(s);
+  });
+}
+async function phSeg() {
+  if (PH.seg) return PH.seg;
+  if (PH.segFail) return null;
+  try {
+    $("phStatus").textContent = "Background AI model load ho raha hai (pehli baar thoda time lagega)...";
+    if (!window.SelfieSegmentation) await loadScript(MP_BASE + "selfie_segmentation.js");
+    const s = new SelfieSegmentation({ locateFile: f => MP_BASE + f });
+    s.setOptions({ modelSelection: 0, selfieMode: false });
+    s.onResults(r => { if (PH.segCb) PH.segCb(r); });
+    await s.initialize();
+    PH.seg = s; return s;
+  } catch (e) { console.warn("segmentation load fail", e); PH.segFail = true; return null; }
+}
+function phRunSeg(seg, cv, w, h) {
+  return new Promise((res, rej) => {
+    PH.segCb = r => {
+      try {
+        const mc = document.createElement("canvas"); mc.width = w; mc.height = h;
+        const mx = mc.getContext("2d", { willReadFrequently: true });
+        mx.drawImage(r.segmentationMask, 0, 0, w, h);
+        const d = mx.getImageData(0, 0, w, h).data;
+        let amin = 255, amax = 0;
+        for (let i = 3; i < d.length; i += 4) { if (d[i] < amin) amin = d[i]; if (d[i] > amax) amax = d[i]; }
+        const useA = amax - amin > 20, out = new Float32Array(w * h);
+        for (let i = 0; i < w * h; i++) out[i] = d[i * 4 + (useA ? 3 : 0)] / 255;
+        res(out);
+      } catch (e) { rej(e); }
+    };
+    seg.send({ image: cv }).catch(rej);
+  });
+}
+// AI na chale to: kinare ke rang se milta-julta background (flood fill) hataao
+function phKeyMask(d, w, h) {
+  const bw = Math.max(2, Math.round(w * 0.04)), bh = Math.max(2, Math.round(h * 0.04));
+  let r = 0, g = 0, b = 0, n = 0;
+  const add = (x, y) => { const i = (y * w + x) * 4; r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; };
+  for (let y = 0; y < bh; y++) for (let x = 0; x < w; x++) add(x, y);
+  for (let y = bh; y < h; y++) for (let x = 0; x < bw; x++) { add(x, y); add(w - 1 - x, y); }
+  r /= n; g /= n; b /= n;
+  const T2 = 55 * 55, N = w * h, bg = new Uint8Array(N), stack = new Int32Array(N);
+  const near = i => { const p = i * 4, dr = d[p] - r, dg = d[p + 1] - g, db = d[p + 2] - b; return dr * dr + dg * dg + db * db < T2; };
+  let sp = 0;
+  const seed = i => { if (!bg[i] && near(i)) { bg[i] = 1; stack[sp++] = i; } };
+  for (let x = 0; x < w; x++) seed(x);
+  for (let y = 0; y < h; y++) { seed(y * w); seed(y * w + w - 1); }
+  while (sp) {
+    const i = stack[--sp], x = i % w, y = (i / w) | 0;
+    if (x > 0) seed(i - 1); if (x < w - 1) seed(i + 1); if (y > 0) seed(i - w); if (y < h - 1) seed(i + w);
+  }
+  const out = new Float32Array(N);
+  for (let i = 0; i < N; i++) out[i] = bg[i] ? 0 : 1;
+  return out;
+}
+function fBox(src, w, h, r) {
+  const tmp = new Float32Array(w * h), out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    const o = y * w; let sum = 0, cnt = 0;
+    for (let x = 0; x <= Math.min(r, w - 1); x++) { sum += src[o + x]; cnt++; }
+    for (let x = 0; x < w; x++) {
+      tmp[o + x] = sum / cnt;
+      const add = x + r + 1, rem = x - r;
+      if (add < w) { sum += src[o + add]; cnt++; }
+      if (rem >= 0) { sum -= src[o + rem]; cnt--; }
+    }
+  }
+  for (let x = 0; x < w; x++) {
+    let sum = 0, cnt = 0;
+    for (let y = 0; y <= Math.min(r, h - 1); y++) { sum += tmp[y * w + x]; cnt++; }
+    for (let y = 0; y < h; y++) {
+      out[y * w + x] = sum / cnt;
+      const add = y + r + 1, rem = y - r;
+      if (add < h) { sum += tmp[add * w + x]; cnt++; }
+      if (rem >= 0) { sum -= tmp[rem * w + x]; cnt--; }
+    }
+  }
+  return out;
+}
+// guided filter: mask ke kinare ko photo ke asli kinare (baal, kandhe) se chipka deta hai
+function phGuided(I, p, w, h) {
+  const N = w * h, r = Math.max(4, Math.round(Math.max(w, h) / 90)), eps = 0.0005;
+  const II = new Float32Array(N), Ip = new Float32Array(N);
+  for (let i = 0; i < N; i++) { II[i] = I[i] * I[i]; Ip[i] = I[i] * p[i]; }
+  const mI = fBox(I, w, h, r), mp = fBox(p, w, h, r), cII = fBox(II, w, h, r), cIp = fBox(Ip, w, h, r);
+  const a = new Float32Array(N), b = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    const v = cII[i] - mI[i] * mI[i], cv = cIp[i] - mI[i] * mp[i];
+    a[i] = cv / (v + eps); b[i] = mp[i] - a[i] * mI[i];
+  }
+  const ma = fBox(a, w, h, r), mb = fBox(b, w, h, r), q = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const v = ma[i] * I[i] + mb[i]; q[i] = v < 0 ? 0 : v > 1 ? 1 : v; }
+  return q;
+}
+async function phGetMask(c) {
+  const key = `${CTX.e.id}|${EV("ph_zoom")}|${EV("ph_x")}|${EV("ph_y")}|${c.width}x${c.height}`;
+  if (CTX.e.mask && CTX.e.mask.key === key) return CTX.e.mask;
+  const S = Math.min(1, 1000 / Math.max(c.width, c.height));
+  const wm = Math.max(8, Math.round(c.width * S)), hm = Math.max(8, Math.round(c.height * S));
+  const wc = document.createElement("canvas"); wc.width = wm; wc.height = hm;
+  const wx = wc.getContext("2d", { willReadFrequently: true });
+  wx.imageSmoothingEnabled = true; wx.imageSmoothingQuality = "high";
+  wx.drawImage(c, 0, 0, wm, hm);
+  const gd = wx.getImageData(0, 0, wm, hm).data;
+  let p = null, ai = true;
+  const seg = await phSeg();
+  if (seg) { try { p = await phRunSeg(seg, wc, wm, hm); } catch (e) { console.warn("segmentation fail", e); } }
+  if (!p) { p = phKeyMask(gd, wm, hm); ai = false; }
+  const I = new Float32Array(wm * hm);
+  for (let i = 0; i < I.length; i++) I[i] = (0.299 * gd[i * 4] + 0.587 * gd[i * 4 + 1] + 0.114 * gd[i * 4 + 2]) / 255;
+  p = phGuided(I, p, wm, hm);
+  CTX.e.mask = { key, w: wm, h: hm, data: p, ai };
+  return CTX.e.mask;
+}
+function phApplyBg(c, m) {
+  const w = c.width, h = c.height, n = m.w * m.h;
+  const ctr = 0.5 + EV("ph_shrink") * 0.035, hw = 0.08 + EV("ph_soft") / 100 * 0.3;
+  const lo = ctr - hw, hi = ctr + hw;
+  const mc = document.createElement("canvas"); mc.width = m.w; mc.height = m.h;
+  const mx = mc.getContext("2d"), mi = mx.createImageData(m.w, m.h), md0 = mi.data;
+  for (let i = 0; i < n; i++) {
+    let t = (m.data[i] - lo) / (hi - lo); t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
+    const v = t * 255; md0[i * 4] = md0[i * 4 + 1] = md0[i * 4 + 2] = v; md0[i * 4 + 3] = 255;
+  }
+  mx.putImageData(mi, 0, 0);
+  const fc = document.createElement("canvas"); fc.width = w; fc.height = h;
+  const fx = fc.getContext("2d", { willReadFrequently: true });
+  fx.imageSmoothingEnabled = true; fx.imageSmoothingQuality = "high";
+  fx.drawImage(mc, 0, 0, w, h);
+  const md = fx.getImageData(0, 0, w, h).data;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  const im = ctx.getImageData(0, 0, w, h), d = im.data;
+  const [R, G, B] = phBgRGB();
+  for (let j = 0, i = 0; j < w * h; j++, i += 4) {
+    const a = md[i] / 255; if (a >= 0.999) continue;
+    const ia = 1 - a;
+    d[i] = d[i] * a + R * ia; d[i + 1] = d[i + 1] * a + G * ia; d[i + 2] = d[i + 2] * a + B * ia;
+  }
+  ctx.putImageData(im, 0, 0);
+}
+
+function phStrip(c) {
+  const name = String(ES("ph_name")).trim(), date = String(ES("ph_date")).trim();
+  const lines = [name, date].filter(Boolean);
+  if (!lines.length) return;
+  const ctx = c.getContext("2d"), pw = c.width, ph = c.height;
+  const sh = Math.round(ph * (lines.length === 2 ? 0.2 : 0.13)), dark = ES("ph_strip") === "dark";
+  ctx.fillStyle = dark ? "#0b0b0b" : "#ffffff"; ctx.fillRect(0, ph - sh, pw, sh);
+  ctx.fillStyle = dark ? "#ffffff" : "#000000"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  const box = sh / lines.length;
+  lines.forEach((t, i) => {
+    let fs = box * (lines.length === 2 && i === 1 ? 0.56 : 0.66);
+    const fam = '"Inter","Noto Sans Devanagari","Segoe UI",Arial,sans-serif';
+    ctx.font = `700 ${fs}px ${fam}`;
+    const mw = ctx.measureText(t).width, maxw = pw * 0.92;
+    if (mw > maxw) { fs *= maxw / mw; ctx.font = `700 ${fs}px ${fam}`; }
+    ctx.fillText(t, pw / 2, ph - sh + box * i + box / 2 + fs * 0.04);
+  });
+}
+
+const phSize = s => ({ w: Math.max(10, +s.ph_w || 0), h: Math.max(10, +s.ph_h || 0) });
+
+async function phRender() {
+  const e = CTX.e, DPI = 600, sz = phSize(CTX.s), wmm = sz.w, hmm = sz.h;
+  const pw = Math.round(wmm / 25.4 * DPI), ph = Math.round(hmm / 25.4 * DPI);
+  const img = e.img, sw = img.naturalWidth, sh = img.naturalHeight, ar = pw / ph;
+  let cw, ch;
+  if (sw / sh > ar) { ch = sh; cw = sh * ar; } else { cw = sw; ch = sw / ar; }
+  const z = Math.max(1, EV("ph_zoom") / 100); cw /= z; ch /= z;
+  const x = Math.min(sw - cw, Math.max(0, (sw - cw) / 2 - EV("ph_x") / 100 * (sw - cw) / 2));
+  const y = Math.min(sh - ch, Math.max(0, (sh - ch) / 2 - EV("ph_y") / 100 * (sh - ch) / 2));
+  e.srcCw = cw;
+  const c = phResample(img, x, y, cw, ch, pw, ph);
+  // mask asli (bina badle) photo se banta hai, phir lighting lagti hai, aakhir me naya background
+  const mask = ES("ph_bg_on") ? await phGetMask(c) : null;
+  phEnhance(c);
+  if (mask) phApplyBg(c, mask);
+  phStrip(c);
+  return c;
+}
+
+// pure layout (mm -> pt). items = har photo-copy {w,h,key} (alag size bhi ho sakta hai), ek ke baad ek, ek line me max `per`
+function phLayout(o) {
+  const MMp = 72 / 25.4, side = 1 * MMp, bottom = 3 * MMp;
+  const gx = o.gx * MMp, gy = o.gy * MMp, top = o.top * MMp, left = o.left * MMp;
+  const availW = o.center ? o.pageW - 2 * side : o.pageW - left - side;
+  const rows = []; let row = null, widthCut = false;
+  o.items.forEach(it => {
+    const w = it.w * MMp, h = it.h * MMp, q = { w, h, key: it.key };
+    if (row && row.list.length < o.per && row.w + gx + w <= availW + 0.01) { row.list.push(q); row.w += gx + w; row.h = Math.max(row.h, h); }
+    else { if (row && row.list.length < o.per) widthCut = true; row = { list: [q], w, h }; rows.push(row); }
+  });
+  const maxRowW = Math.max(...rows.map(r => r.w));
+  const x0 = o.center ? (o.pageW - maxRowW) / 2 : left;
+  let page = 0, cursor = o.pageH - top; const pos = [];
+  rows.forEach(r => {
+    if (cursor - r.h < bottom && cursor !== o.pageH - top) { page++; cursor = o.pageH - top; }
+    let x = x0;
+    r.list.forEach(q => { pos.push({ page, x, y: cursor - q.h, w: q.w, h: q.h, key: q.key }); x += q.w + gx; });
+    cursor -= r.h + gy;
+  });
+  return { pages: page + 1, pos, rows: rows.length, maxCount: Math.max(...rows.map(r => r.list.length)), widthCut };
+}
+
+async function phPreviewPdf(bytes) {
+  const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+  const box = $("phPreview"); box.innerHTML = "";
+  for (let n = 1; n <= pdf.numPages; n++) {
+    const page = await pdf.getPage(n), vp = page.getViewport({ scale: 1.1 });
+    const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+    await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+    box.appendChild(c);
+  }
+}
+
+async function phBuild(manual) {
+  if (manual) PH.manual = true;
+  if (PH.busy) { PH.again = true; return; }
+  if (!PH.ents.length) { if (manual) $("phStatus").textContent = "Pehle photo upload karo."; return; }
+  PH.busy = true;
+  const gen = PH.gen;
+  const wantManual = PH.manual; PH.manual = false;
+  try {
+    phSaveActive();
+    try { await Promise.all([document.fonts.load('700 40px "Inter"'), document.fonts.load('700 40px "Noto Sans Devanagari"')]); } catch (e) { /* fonts optional */ }
+    const { PDFDocument, rgb } = PDFLib;
+    const doc = await PDFDocument.create();
+    const ents = PH.ents.slice(), imgs = [], items = [], wraps = [];
+    for (let i = 0; i < ents.length; i++) {
+      const e = ents[i];
+      $("phStatus").textContent = ents.length > 1 ? `Photo ${i + 1}/${ents.length} taiyaar ho raha hai...` : "Photo taiyaar ho raha hai...";
+      CTX = { e, s: e.s };
+      let c; try { c = await phRender(); } finally { CTX = null; }
+      if (gen !== PH.gen) return; // beech me "Sab hatao" dab gaya
+      e.canvas = c;
+      const blob = await new Promise(r => c.toBlob(r, "image/png"));
+      imgs.push(await doc.embedPng(new Uint8Array(await blob.arrayBuffer()))); // ek baar embed, uski sab copy me wahi
+      const n = Math.max(1, Math.round(+e.s.ph_n || 1)), sz = phSize(e.s);
+      for (let k = 0; k < n; k++) items.push({ w: sz.w, h: sz.h, key: i });
+      const wrap = document.createElement("div"); wrap.className = "po"; wrap.appendChild(c);
+      const cap = document.createElement("div"); cap.textContent = `${i + 1}. ${String(e.s.ph_name || "").trim() || "Photo"} · ${n} copy`; wrap.appendChild(cap);
+      wraps.push(wrap);
+    }
+    const letter = $("ph_page").value === "letter";
+    const pageW = letter ? 612 : A4W, pageH = letter ? 792 : A4H;
+    const per = Math.max(1, Math.round(pv("ph_per")));
+    const L = phLayout({ pageW, pageH, top: pv("ph_top"), left: pv("ph_left"), gx: pv("ph_cg"), gy: pv("ph_rg"), per, center: $("ph_center").checked, items });
+    const pages = [];
+    for (let i = 0; i < L.pages; i++) pages.push(doc.addPage([pageW, pageH]));
+    const border = $("ph_border").checked;
+    L.pos.forEach(p => {
+      const pg = pages[p.page];
+      pg.drawImage(imgs[p.key], { x: p.x, y: p.y, width: p.w, height: p.h });
+      if (border) pg.drawRectangle({ x: p.x, y: p.y, width: p.w, height: p.h, borderColor: rgb(0, 0, 0), borderWidth: 0.4, borderOpacity: 1, color: rgb(1, 1, 1), opacity: 0 });
+    });
+    PH.bytes = await doc.save();
+    if (gen !== PH.gen) return;
+    if (PH.url) URL.revokeObjectURL(PH.url);
+    PH.url = URL.createObjectURL(new Blob([PH.bytes], { type: "application/pdf" }));
+    const names = ents.map(e => String(e.s.ph_name || "").trim()).filter(Boolean);
+    let nm = (names[0] || "photos").replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "") || "photos";
+    if (ents.length > 1) nm += `_plus${ents.length - 1}`;
+    $("phLink").href = PH.url; $("phLink").download = `Passport_${nm}_${letter ? "Letter" : "A4"}.pdf`;
+    $("phOne").replaceChildren(...wraps);
+    await phPreviewPdf(PH.bytes);
+    $("phDown").disabled = false; $("phOpen").disabled = false;
+    let note = `${items.length} photo` + (ents.length > 1 ? ` (${ents.length} log)` : "") + ` · ek line me max ${L.maxCount}`
+      + (L.widthCut && per > L.maxCount ? ` (is page par isse zyada fit nahi hote, baaki agli line me)` : "") + ` · ${L.pages} page`;
+    ents.forEach((e, i) => { if (e.srcCw < phSize(e.s).w / 25.4 * 300) note += ` · ⚠ Photo ${i + 1} thodi chhoti hai, badi photo se quality behtar aayegi`; });
+    if (ents.some(e => e.s.ph_bg_on && e.mask && !e.mask.ai)) note += " · ⚠ AI model load nahi hua (internet check karo), isliye simple tareeke se background hataya gaya";
+    $("phFit").textContent = note; $("phStatus").textContent = wantManual ? "Ho gaya!" : "";
+    if (wantManual) { celebrate(); if ($("ph_dl").checked) $("phLink").click(); }
+  } catch (e) {
+    console.error(e); $("phStatus").textContent = "Error: " + (e.message || e);
+  } finally {
+    CTX = null; PH.busy = false;
+    if (PH.again) { PH.again = false; phBuild(false); }
+  }
+}
+$("cDl").onclick = doDownload;
+$("cReset").onclick = () => { STEPPERS.forEach(s => { $(s.id).value = s.def; }); syncSteppers(); if (items.length) build(); };
+
+async function showOut(bytes) {
+  const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+  const box = $("outPreview"); box.innerHTML = "";
+  for (let n = 1; n <= pdf.numPages; n++) {
+    const page = await pdf.getPage(n);
+    const vp = page.getViewport({ scale: 1.1 });
+    const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+    await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+    box.appendChild(c);
+  }
+  $("outCard").classList.remove("hide");
+  if (inCust) copyPreview();
+}
+</script>
+<script>/* ====================== Login / Registration / Forgot Password ======================
+   Ye sab aapke browser me chalta hai (koi server nahi), isliye:
+   - Registration browser ki storage me save hota hai: jis browser me register kiya, login bhi usi me chalega.
+   - Password kabhi seedha save nahi hota, sirf salt ke saath hash hota hai.
+   - OTP ka asli SMS bhejne ke liye SMS provider + chhota server chahiye. Jab tak `otpApi` khali hai, OTP "DEMO" box me
+     screen par dikhta hai (yani asli security nahi). Server lagane par OTP kabhi page tak aata hi nahi:
+
+   otpApi = "https://aapka-server.example.com"  (neeche ke 2 endpoint)
+     POST {otpApi}/send    body {"mobile":"9876543210"}               -> {"ok":true}   (server khud 4 digit OTP banaye, SMS bheje, hash+expiry rakhe)
+     POST {otpApi}/verify  body {"mobile":"9876543210","otp":"4821"}  -> {"ok":true}   (galat/expire par {"ok":false,"error":"..."})
+*/
+(function () {
+  "use strict";
+  const CFG = {
+    otpApi: "",          // khali = DEMO mode (OTP screen par dikhega). Asli SMS ke liye apne server ka URL daalo.
+    demoShowOtp: true,   // DEMO mode me OTP dikhana (false karoge to bina server ke Forgot Password band ho jayega)
+    otpTtlSec: 300,      // OTP 5 minute me expire
+    otpMaxTries: 3,      // galat OTP kitni baar
+    otpResendSec: 30,    // dobara bhejne ke beech kam se kam itna wait
+    loginMaxFails: 5,    // itni galat koshish ke baad
+    loginLockSec: 60,    // itne second ke liye lock
+    minPass: 6
+  };
+
+  const $ = id => document.getElementById(id);
+  const K_USERS = "cardsheet.users.v1", K_SESSION = "cardsheet.session.v1", K_LOCK = "cardsheet.lock.v1";
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+  /* ---------- storage ---------- */
+  const st = {
+    get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+    del(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } },
+    ok() { try { window.localStorage.setItem("cardsheet.t", "1"); window.localStorage.removeItem("cardsheet.t"); return true; } catch (e) { return false; } }
+  };
+  const jget = (k, d) => { try { const v = JSON.parse(st.get(k)); return v && typeof v === "object" ? v : d; } catch (e) { return d; } };
+
+  /* ---------- crypto helpers ---------- */
+  const te = new TextEncoder();
+  const toHex = u8 => Array.from(u8, x => x.toString(16).padStart(2, "0")).join("");
+  const fromHex = s => { const a = new Uint8Array(s.length / 2); for (let i = 0; i < a.length; i++) a[i] = parseInt(s.substr(i * 2, 2), 16); return a; };
+  const concat = (...p) => { const o = new Uint8Array(p.reduce((n, x) => n + x.length, 0)); let k = 0; p.forEach(x => { o.set(x, k); k += x.length; }); return o; };
+  const rnd = n => { const a = new Uint8Array(n); window.crypto.getRandomValues(a); return a; };
+  const eq = (a, b) => { if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; };
+
+  const K256 = new Uint32Array([
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+  ]);
+  // SHA-256 (sirf tab kaam aata hai jab browser ka WebCrypto na mile, aur OTP ko hash karne me)
+  function sha256(msg) {
+    const l = msg.length, bits = l * 8, n = ((l + 9 + 63) >> 6) << 6, m = new Uint8Array(n);
+    m.set(msg); m[l] = 0x80;
+    const dv = new DataView(m.buffer);
+    dv.setUint32(n - 8, Math.floor(bits / 4294967296)); dv.setUint32(n - 4, bits >>> 0);
+    let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a, h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
+    const w = new Uint32Array(64);
+    for (let off = 0; off < n; off += 64) {
+      for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4);
+      for (let i = 16; i < 64; i++) {
+        const a = w[i - 15], b = w[i - 2];
+        const s0 = ((a >>> 7) | (a << 25)) ^ ((a >>> 18) | (a << 14)) ^ (a >>> 3);
+        const s1 = ((b >>> 17) | (b << 15)) ^ ((b >>> 19) | (b << 13)) ^ (b >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+      let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+      for (let i = 0; i < 64; i++) {
+        const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        const t1 = (h + S1 + ((e & f) ^ (~e & g)) + K256[i] + w[i]) | 0;
+        const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        const t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
+    }
+    const out = new Uint8Array(32), ov = new DataView(out.buffer);
+    [h0, h1, h2, h3, h4, h5, h6, h7].forEach((v, i) => ov.setUint32(i * 4, v));
+    return out;
+  }
+  const hasSubtle = () => !!(window.crypto && window.crypto.subtle && window.crypto.subtle.importKey && window.crypto.subtle.deriveBits);
+  // password -> hash. p1 = PBKDF2-SHA256 (150000 baar), s1 = salt ke saath 20000 baar SHA-256 (jab WebCrypto na ho)
+  async function hashPw(pw, saltHex, alg) {
+    const salt = fromHex(saltHex), pwb = te.encode(pw);
+    if (alg === "p1") {
+      if (!hasSubtle()) throw new Error("NO_SUBTLE");
+      const key = await window.crypto.subtle.importKey("raw", pwb, "PBKDF2", false, ["deriveBits"]);
+      return toHex(new Uint8Array(await window.crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 150000 }, key, 256)));
+    }
+    const tail = concat(salt, pwb); let h = sha256(tail);
+    for (let i = 0; i < 20000; i++) h = sha256(concat(h, tail));
+    return toHex(h);
+  }
+  // 0000-9999 me se barabar chance se ek 4 digit OTP
+  function genOtp() {
+    const buf = new Uint32Array(1), lim = Math.floor(4294967296 / 10000) * 10000; let x;
+    do { window.crypto.getRandomValues(buf); x = buf[0]; } while (x >= lim);
+    return String(x % 10000).padStart(4, "0");
+  }
+
+  /* ---------- small UI helpers ---------- */
+  const EYE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 19.5C5.5 19.5 1.5 12 1.5 12a19 19 0 0 1 4.6-5.4M9.9 4.7A10 10 0 0 1 12 4.5c6.5 0 10.5 7.5 10.5 7.5a19 19 0 0 1-2.4 3.4"/><path d="M1 1l22 22M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+  const setMsg = (id, txt, kind) => { const el = $(id); el.textContent = txt || ""; el.className = "amsg" + (kind ? " " + kind : ""); };
+  const clean = s => String(s || "").replace(/\s+/g, " ").trim();
+  const normMobile = v => { let d = String(v || "").replace(/\D/g, ""); if (d.length === 12 && d.startsWith("91")) d = d.slice(2); else if (d.length === 11 && d[0] === "0") d = d.slice(1); return d; };
+  const okMobile = m => /^[6-9]\d{9}$/.test(m);
+  const maskMobile = m => m.slice(0, 2) + "••••••" + m.slice(-2);
+
+  document.querySelectorAll(".eye[data-for]").forEach(b => {
+    b.innerHTML = EYE;
+    b.onclick = () => { const i = $(b.dataset.for), show = i.type === "password"; i.type = show ? "text" : "password"; b.innerHTML = show ? EYE_OFF : EYE; };
+  });
+  ["lg_user", "rg_mobile", "fg_user"].forEach(id => {
+    const el = $(id);
+    el.addEventListener("input", () => { el.value = normMobile(el.value).slice(0, 10); });
+  });
+  $("fg_otp").addEventListener("input", () => { $("fg_otp").value = $("fg_otp").value.replace(/\D/g, "").slice(0, 4); });
+
+  /* ---------- tabs ---------- */
+  const FORMS = { login: "fLogin", register: "fReg", forgot: "fForgot" };
+  function showTab(name) {
+    document.querySelectorAll(".atab").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+    Object.keys(FORMS).forEach(k => $(FORMS[k]).classList.toggle("hide", k !== name));
+    ["lg_msg", "rg_msg", "fg_msg"].forEach(id => setMsg(id, ""));
+    if (name === "forgot") fgReset();
+    const first = { login: "lg_user", register: "rg_mobile", forgot: "fg_user" }[name];
+    try { $(first).focus(); } catch (e) { /* ignore */ }
+  }
+  document.querySelectorAll(".atab").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+  /* ---------- session / unlock ---------- */
+  function enterApp(u) {
+    $("uName").textContent = u.name + " · " + u.shop;
+    $("userChip").classList.remove("hide");
+    document.body.classList.remove("locked");
+    try { window.scrollTo(0, 0); } catch (e) { /* ignore */ }
+  }
+  $("logoutBtn").onclick = () => { st.del(K_SESSION); window.location.reload(); }; // reload = screen par rakha customer data bhi saaf
+
+  /* ---------- registration ---------- */
+  function showPop(user, pass) {
+    $("popUser").textContent = user; $("popPass").textContent = pass; $("popEye").innerHTML = EYE_OFF; $("popPass").dataset.shown = "1";
+    $("authPop").classList.remove("hide");
+    try { $("popGo").focus(); } catch (e) { /* ignore */ }
+  }
+  $("popEye").onclick = () => {
+    const el = $("popPass"), shown = el.dataset.shown === "1";
+    if (shown) { el.dataset.v = el.textContent; el.textContent = "•".repeat(Math.min(12, el.dataset.v.length)); el.dataset.shown = "0"; $("popEye").innerHTML = EYE; }
+    else { el.textContent = el.dataset.v || ""; el.dataset.shown = "1"; $("popEye").innerHTML = EYE_OFF; }
+  };
+  $("popGo").onclick = () => {
+    const u = $("popUser").textContent;
+    $("popPass").textContent = ""; $("popPass").dataset.v = ""; // password popup band hote hi page se hata do
+    $("authPop").classList.add("hide");
+    showTab("login");
+    $("lg_user").value = u;
+    setMsg("lg_msg", "Registration ho gaya. Ab apna password daalke login karo.", "ok");
+    try { $("lg_pass").focus(); } catch (e) { /* ignore */ }
+  };
+
+  $("fReg").addEventListener("submit", async e => {
+    e.preventDefault();
+    const m = normMobile($("rg_mobile").value), name = clean($("rg_name").value), shop = clean($("rg_shop").value), pass = $("rg_pass").value;
+    if (!okMobile(m)) return setMsg("rg_msg", "Sahi 10 digit mobile number daalo (6, 7, 8 ya 9 se shuru).", "err");
+    if (name.length < 2) return setMsg("rg_msg", "Apna naam likho.", "err");
+    if (shop.length < 2) return setMsg("rg_msg", "Shop name likho.", "err");
+    if (pass.length < CFG.minPass) return setMsg("rg_msg", `Password kam se kam ${CFG.minPass} akshar ka rakho.`, "err");
+    if (!st.ok()) return setMsg("rg_msg", "Is browser me storage band hai (private mode?), isliye registration nahi ho sakta.", "err");
+    const users = jget(K_USERS, {});
+    if (has(users, m)) return setMsg("rg_msg", "Ye mobile number pehle se registered hai. Login karo, ya Forgot Password use karo.", "err");
+    $("rg_btn").disabled = true; setMsg("rg_msg", "Account ban raha hai...", "");
+    try {
+      const salt = toHex(rnd(16)), alg = hasSubtle() ? "p1" : "s1";
+      const hash = await hashPw(pass, salt, alg);
+      users[m] = { mobile: m, name, shop, salt, alg, hash, created: Date.now() };
+      if (!st.set(K_USERS, JSON.stringify(users))) throw new Error("save");
+      setMsg("rg_msg", "");
+      $("rg_mobile").value = ""; $("rg_name").value = ""; $("rg_shop").value = ""; $("rg_pass").value = "";
+      showPop(m, pass);
+    } catch (err) {
+      setMsg("rg_msg", "Registration nahi ho paaya. Dobara koshish karo.", "err");
+    } finally { $("rg_btn").disabled = false; }
+  });
+
+  /* ---------- login ---------- */
+  const lockLeft = m => { const o = jget(K_LOCK, {})[m]; return o && o.u > Date.now() ? Math.ceil((o.u - Date.now()) / 1000) : 0; };
+  function noteFail(m) {
+    const all = jget(K_LOCK, {}), o = (has(all, m) && all[m]) || { f: 0, u: 0 };
+    o.f = (o.u > Date.now() ? 0 : o.f) + 1;
+    if (o.f >= CFG.loginMaxFails) { o.f = 0; o.u = Date.now() + CFG.loginLockSec * 1000; }
+    all[m] = o; st.set(K_LOCK, JSON.stringify(all));
+    return o.u > Date.now();
+  }
+  function clearFails(m) { const all = jget(K_LOCK, {}); if (has(all, m)) { delete all[m]; st.set(K_LOCK, JSON.stringify(all)); } }
+
+  $("fLogin").addEventListener("submit", async e => {
+    e.preventDefault();
+    const m = normMobile($("lg_user").value), pass = $("lg_pass").value;
+    if (!okMobile(m) || !pass) return setMsg("lg_msg", "Username (mobile number) aur password dono daalo.", "err");
+    const lk = lockLeft(m);
+    if (lk > 0) return setMsg("lg_msg", `Bahut zyada galat koshish. ${lk} second baad dobara try karo.`, "err");
+    $("lg_btn").disabled = true; setMsg("lg_msg", "Check ho raha hai...", "");
+    try {
+      const users = jget(K_USERS, {}), u = has(users, m) ? users[m] : null;
+      let good = false;
+      if (u) good = eq(await hashPw(pass, u.salt, u.alg), u.hash);
+      else await hashPw(pass, "0".repeat(32), hasSubtle() ? "p1" : "s1"); // user na ho tab bhi same time lage
+      if (!good) {
+        setMsg("lg_msg", noteFail(m) ? `Bahut zyada galat koshish. ${CFG.loginLockSec} second baad dobara try karo.` : "Username ya password galat hai.", "err");
+      } else {
+        clearFails(m); $("lg_pass").value = "";
+        st.set(K_SESSION, JSON.stringify({ m, t: Date.now() }));
+        enterApp(u);
+      }
+    } catch (err) {
+      setMsg("lg_msg", err && err.message === "NO_SUBTLE" ? "Is link par secure login nahi chal raha. File ko seedha Chrome me kholo ya https link use karo." : "Login me dikkat aayi. Dobara koshish karo.", "err");
+    } finally { $("lg_btn").disabled = false; }
+  });
+
+  /* ---------- forgot password: username -> OTP -> new password ---------- */
+  let otp = null, grant = null, fgMobile = "", resendTimer = 0;
+
+  async function apiPost(path, body) {
+    const r = await fetch(CFG.otpApi.replace(/\/+$/, "") + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    let j = null; try { j = await r.json(); } catch (e) { /* ignore */ }
+    return { ok: !!(r.ok && j && j.ok === true), j };
+  }
+  async function sendOtp(m) {
+    const now = Date.now();
+    const sentMap = jget("cardsheet.otpsent.v1", {}), last = has(sentMap, m) ? +sentMap[m] || 0 : 0;
+    if (now - last < CFG.otpResendSec * 1000 && now >= last) return { err: `OTP abhi bheja hai. ${Math.ceil((CFG.otpResendSec * 1000 - (now - last)) / 1000)} second baad dobara bhejo.` };
+    const mark = () => { sentMap[m] = now; st.set("cardsheet.otpsent.v1", JSON.stringify(sentMap)); };
+    if (CFG.otpApi) {
+      let r; try { r = await apiPost("/send", { mobile: m }); } catch (e) { return { err: "OTP service se connect nahi ho paaya. Internet check karo." }; }
+      if (!r.ok) return { err: (r.j && r.j.error) || "OTP nahi bhej paaye. Thodi der baad koshish karo." };
+      mark(); otp = { mobile: m, mode: "api", exp: now + CFG.otpTtlSec * 1000, tries: 0, sentAt: now };
+      return { mode: "api" };
+    }
+    if (!CFG.demoShowOtp) return { err: "OTP service abhi set nahi hai." };
+    const code = genOtp(), salt = toHex(rnd(8));
+    mark(); otp = { mobile: m, mode: "demo", salt, hash: toHex(sha256(te.encode(salt + ":" + m + ":" + code))), exp: now + CFG.otpTtlSec * 1000, tries: 0, sentAt: now };
+    return { mode: "demo", code };
+  }
+  async function checkOtp(m, code) {
+    const s = otp;
+    if (!s || s.mobile !== m) return { err: "Pehle OTP bhejo.", dead: true };
+    if (Date.now() > s.exp) { otp = null; return { err: "OTP expire ho gaya. Naya OTP mangao.", dead: true }; }
+    if (s.tries >= CFG.otpMaxTries) { otp = null; return { err: "Bahut galat OTP. Naya OTP mangao.", dead: true }; }
+    s.tries++;
+    let good = false;
+    if (s.mode === "api") {
+      let r; try { r = await apiPost("/verify", { mobile: m, otp: code }); } catch (e) { s.tries--; return { err: "OTP service se connect nahi ho paaya. Internet check karo." }; }
+      good = r.ok;
+      if (!good && r.j && r.j.error) { if (s.tries >= CFG.otpMaxTries) otp = null; return { err: r.j.error, dead: !otp }; }
+    } else good = eq(toHex(sha256(te.encode(s.salt + ":" + m + ":" + code))), s.hash);
+    if (good) { otp = null; grant = { mobile: m, token: toHex(rnd(16)), exp: Date.now() + 10 * 60 * 1000 }; return { ok: true, token: grant.token }; }
+    if (s.tries >= CFG.otpMaxTries) { otp = null; return { err: "Bahut galat OTP. Naya OTP mangao.", dead: true }; }
+    return { err: `OTP galat hai. ${CFG.otpMaxTries - s.tries} koshish baaki.` };
+  }
+
+  function fgStep(n) { [1, 2, 3].forEach(i => $("fgS" + i).classList.toggle("hide", i !== n)); }
+  function fgReset() {
+    clearInterval(resendTimer); otp = null; grant = null; fgMobile = "";
+    ["fg_user", "fg_otp", "fg_p1", "fg_p2"].forEach(id => $(id).value = "");
+    ["fg_p1", "fg_p2"].forEach(id => { $(id).type = "password"; });
+    document.querySelectorAll("#fgS3 .eye").forEach(b => b.innerHTML = EYE);
+    $("smsBox").classList.add("hide");
+    const note = $("fgDemoNote");
+    if (CFG.otpApi) note.classList.add("hide");
+    else {
+      note.classList.remove("hide");
+      note.textContent = CFG.demoShowOtp
+        ? "Demo mode: SMS service abhi connected nahi hai, isliye OTP yahin screen par dikhega."
+        : "OTP service abhi set nahi hai, isliye Forgot Password abhi band hai.";
+    }
+    $("fg_send").disabled = !CFG.otpApi && !CFG.demoShowOtp;
+    fgStep(1);
+  }
+  function startResend() {
+    clearInterval(resendTimer);
+    const b = $("fg_resend"); let left = CFG.otpResendSec; b.disabled = true;
+    const tick = () => {
+      if (left <= 0) { clearInterval(resendTimer); b.disabled = false; b.textContent = "OTP dobara bhejo"; return; }
+      b.textContent = `OTP dobara bhejo (${left}s)`; left--;
+    };
+    tick(); resendTimer = setInterval(tick, 1000);
+  }
+  function showSent(res) {
+    $("fgSent").textContent = `OTP ${maskMobile(fgMobile)} par bheja gaya hai. ${Math.round(CFG.otpTtlSec / 60)} minute me expire hoga.`;
+    if (res.mode === "demo") {
+      $("smsText").textContent = ` Aapka OTP ${res.code} hai. Ye ${Math.round(CFG.otpTtlSec / 60)} minute me expire hoga. Kisi ko na batayein. (SMS service connected nahi hai, isliye yahin dikh raha hai)`;
+      $("smsBox").classList.remove("hide");
+    } else $("smsBox").classList.add("hide");
+  }
+
+  $("fgS1").addEventListener("submit", async e => {
+    e.preventDefault();
+    const m = normMobile($("fg_user").value);
+    if (!okMobile(m)) return setMsg("fg_msg", "Apna registered mobile number (Username) daalo.", "err");
+    const users = jget(K_USERS, {});
+    if (!has(users, m)) return setMsg("fg_msg", "Ye username registered nahi hai. Pehle Registration karo.", "err");
+    $("fg_send").disabled = true; setMsg("fg_msg", "OTP bheja ja raha hai...", "");
+    try {
+      const res = await sendOtp(m);
+      if (res.err) return setMsg("fg_msg", res.err, "err");
+      fgMobile = m; showSent(res); setMsg("fg_msg", "");
+      $("fg_otp").value = ""; fgStep(2); startResend();
+      try { $("fg_otp").focus(); } catch (er) { /* ignore */ }
+    } finally { $("fg_send").disabled = !CFG.otpApi && !CFG.demoShowOtp; }
+  });
+  $("fg_resend").onclick = async () => {
+    $("fg_resend").disabled = true;
+    const res = await sendOtp(fgMobile);
+    if (res.err) { setMsg("fg_msg", res.err, "err"); $("fg_resend").disabled = false; return; }
+    showSent(res); setMsg("fg_msg", "Naya OTP bhej diya.", "ok"); $("fg_otp").value = ""; startResend();
+  };
+  $("fg_change").onclick = () => { fgReset(); setMsg("fg_msg", ""); };
+
+  $("fgS2").addEventListener("submit", async e => {
+    e.preventDefault();
+    const code = $("fg_otp").value.trim();
+    if (!/^\d{4}$/.test(code)) return setMsg("fg_msg", "4 digit ka OTP daalo.", "err");
+    $("fg_verify").disabled = true;
+    try {
+      const r = await checkOtp(fgMobile, code);
+      if (r.ok) { setMsg("fg_msg", "OTP sahi hai. Ab naya password set karo.", "ok"); fgStep(3); try { $("fg_p1").focus(); } catch (er) { /* ignore */ } return; }
+      setMsg("fg_msg", r.err, "err");
+      if (r.dead) { clearInterval(resendTimer); $("fg_resend").disabled = false; $("fg_resend").textContent = "Naya OTP bhejo"; }
+    } finally { $("fg_verify").disabled = false; }
+  });
+
+  $("fgS3").addEventListener("submit", async e => {
+    e.preventDefault();
+    const p1 = $("fg_p1").value, p2 = $("fg_p2").value;
+    if (!grant || grant.mobile !== fgMobile || Date.now() > grant.exp) { fgReset(); return setMsg("fg_msg", "OTP verify nahi hua ya time khatam ho gaya. Dobara shuru karo.", "err"); }
+    if (p1.length < CFG.minPass) return setMsg("fg_msg", `Naya password kam se kam ${CFG.minPass} akshar ka rakho.`, "err");
+    if (p1 !== p2) return setMsg("fg_msg", "Dono password same nahi hain.", "err");
+    $("fg_reset").disabled = true;
+    try {
+      const users = jget(K_USERS, {}), u = has(users, fgMobile) ? users[fgMobile] : null;
+      if (!u) { fgReset(); return setMsg("fg_msg", "Ye username registered nahi hai.", "err"); }
+      u.salt = toHex(rnd(16)); u.alg = hasSubtle() ? "p1" : "s1"; u.hash = await hashPw(p1, u.salt, u.alg);
+      users[fgMobile] = u;
+      if (!st.set(K_USERS, JSON.stringify(users))) throw new Error("save");
+      const done = fgMobile; grant = null; clearFails(done);
+      showTab("login"); $("lg_user").value = done;
+      setMsg("lg_msg", "Password badal gaya. Ab naye password se login karo.", "ok");
+      try { $("lg_pass").focus(); } catch (er) { /* ignore */ }
+    } catch (err) {
+      setMsg("fg_msg", "Password badal nahi paaya. Dobara koshish karo.", "err");
+    } finally { $("fg_reset").disabled = false; }
+  });
+
+  /* ---------- start ---------- */
+  if (!st.ok()) { const w = $("authWarn"); w.textContent = "Is browser me storage band hai (private mode?), isliye login aur registration kaam nahi karenge."; w.classList.remove("hide"); }
+  const sess = jget(K_SESSION, null);
+  if (sess && typeof sess.m === "string") {
+    const users = jget(K_USERS, {});
+    if (has(users, sess.m)) enterApp(users[sess.m]); else st.del(K_SESSION);
+  }
+})();
+</script>
+</body>
+</html>
