@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CARD SHEET PRO BY - RISHI YADAV — ID PDF to A4</title>
-  <link rel="icon" type="image/png" href="LOGO.PNG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap">
@@ -203,7 +202,7 @@
   .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
   .auth-brand b { display:block; font-family:"Space Grotesk",Inter,sans-serif; font-size:16px; line-height:1.25; }
   .auth-brand small { display:block; color:var(--mut); font-size:12px; }
-  .atabs { display:grid; grid-template-columns:1fr 1.15fr 1.3fr; gap:6px; padding:5px; border-radius:14px; background:rgba(0,0,0,.35); border:1px solid var(--line); margin-bottom:6px; }
+  .atabs { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:5px; border-radius:14px; background:rgba(0,0,0,.35); border:1px solid var(--line); margin-bottom:6px; }
   .atab { padding:10px 4px; font-size:13px; font-weight:600; border-radius:10px; background:transparent; color:var(--mut); box-shadow:none; }
   .atab:hover:not(:disabled) { transform:none; filter:none; color:var(--txt); }
   .atab.on { background:var(--grad); color:#fff; box-shadow:0 8px 22px rgba(111,141,255,.35); }
@@ -254,77 +253,36 @@
 
     <div class="atabs" role="tablist">
       <button type="button" class="atab on" data-tab="login" role="tab">Login</button>
-      <button type="button" class="atab" data-tab="register" role="tab">Registration</button>
       <button type="button" class="atab" data-tab="forgot" role="tab">Forgot Password</button>
     </div>
 
     <!-- LOGIN -->
     <form id="fLogin" class="aform" novalidate>
-      <label for="lg_user">Username (mobile number)</label>
-      <input id="lg_user" type="tel" inputmode="numeric" autocomplete="username" maxlength="16" placeholder="10 digit mobile number" />
+      <label for="lg_user">Username</label>
+      <input id="lg_user" type="text" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="40" placeholder="Username" />
       <label for="lg_pass">Password</label>
-      <div class="pwwrap"><input id="lg_pass" type="password" autocomplete="current-password" placeholder="Password" /><button type="button" class="eye" data-for="lg_pass" aria-label="Password dikhao ya chhupao"></button></div>
+      <div class="pwwrap"><input id="lg_pass" type="password" autocomplete="current-password" maxlength="100" placeholder="Password" /><button type="button" class="eye" data-for="lg_pass" aria-label="Password dikhao ya chhupao"></button></div>
       <div id="lg_msg" class="amsg"></div>
       <button type="submit" class="abtn" id="lg_btn">Customer Login</button>
-    </form>
-
-    <!-- REGISTRATION -->
-    <form id="fReg" class="aform hide" novalidate>
-      <label for="rg_mobile">Mobile number (yahi aapka Username hoga)</label>
-      <input id="rg_mobile" type="tel" inputmode="numeric" autocomplete="tel" maxlength="16" placeholder="10 digit mobile number" />
-      <label for="rg_name">Aapka naam</label>
-      <input id="rg_name" type="text" autocomplete="name" maxlength="60" placeholder="jaise: Rishi Yadav" />
-      <label for="rg_shop">Shop name</label>
-      <input id="rg_shop" type="text" autocomplete="organization" maxlength="80" placeholder="jaise: Yadav Computer Center" />
-      <label for="rg_pass">Password</label>
-      <div class="pwwrap"><input id="rg_pass" type="password" autocomplete="new-password" placeholder="Kam se kam 6 akshar" /><button type="button" class="eye" data-for="rg_pass" aria-label="Password dikhao ya chhupao"></button></div>
-      <div id="rg_msg" class="amsg"></div>
-      <button type="submit" class="abtn" id="rg_btn">Submit</button>
     </form>
 
     <!-- FORGOT PASSWORD -->
     <div id="fForgot" class="aform hide">
       <form id="fgS1" novalidate>
-        <label for="fg_user">Username (mobile number)</label>
-        <input id="fg_user" type="tel" inputmode="numeric" autocomplete="username" maxlength="16" placeholder="Registered mobile number" />
-        <div id="fgDemoNote" class="anote hide"></div>
-        <button type="submit" class="abtn" id="fg_send">OTP bhejo</button>
-      </form>
-
-      <form id="fgS2" class="hide" novalidate>
-        <div id="fgSent" style="font-size:13.5px;color:var(--mut)"></div>
-        <div id="smsBox" class="sms hide"><small>📩 DEMO SMS</small><span id="smsText"></span></div>
-        <label for="fg_otp">4 digit OTP</label>
-        <input id="fg_otp" class="otpin" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••" />
-        <div class="arow">
-          <button type="button" class="alink" id="fg_resend" disabled>OTP dobara bhejo</button>
-          <button type="button" class="alink" id="fg_change">Mobile number badlo</button>
-        </div>
-        <button type="submit" class="abtn" id="fg_verify">Submit</button>
+        <label for="fg_user">Registered mobile number</label>
+        <input id="fg_user" type="tel" inputmode="numeric" autocomplete="off" maxlength="16" placeholder="10 digit mobile number" />
+        <button type="submit" class="abtn" id="fg_send">Aage badho</button>
       </form>
 
       <form id="fgS3" class="hide" novalidate>
         <label for="fg_p1">New Password</label>
-        <div class="pwwrap"><input id="fg_p1" type="password" autocomplete="new-password" placeholder="Naya password (kam se kam 6 akshar)" /><button type="button" class="eye" data-for="fg_p1" aria-label="Password dikhao ya chhupao"></button></div>
+        <div class="pwwrap"><input id="fg_p1" type="password" autocomplete="new-password" maxlength="100" placeholder="Naya password (kam se kam 6 akshar)" /><button type="button" class="eye" data-for="fg_p1" aria-label="Password dikhao ya chhupao"></button></div>
         <label for="fg_p2">Confirm New Password</label>
-        <div class="pwwrap"><input id="fg_p2" type="password" autocomplete="new-password" placeholder="Naya password dobara likho" /><button type="button" class="eye" data-for="fg_p2" aria-label="Password dikhao ya chhupao"></button></div>
-        <button type="submit" class="abtn" id="fg_reset">Password reset karo</button>
+        <div class="pwwrap"><input id="fg_p2" type="password" autocomplete="new-password" maxlength="100" placeholder="Naya password dobara likho" /><button type="button" class="eye" data-for="fg_p2" aria-label="Password dikhao ya chhupao"></button></div>
+        <button type="submit" class="abtn" id="fg_reset">Password badlo</button>
       </form>
       <div id="fg_msg" class="amsg"></div>
     </div>
-  </div>
-</div>
-
-<div id="authPop" class="modal hide" style="z-index:120">
-  <div class="mbox">
-    <div class="okk"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-    <div style="font-weight:700;font-size:18px">Registration ho gaya</div>
-    <div style="color:var(--mut);font-size:13px;margin-top:4px">Ye details yaad rakho ya screenshot le lo</div>
-    <div class="cred">
-      <div><span>Aapka Username</span><b id="popUser"></b></div>
-      <div><span>Aapka Password</span><b id="popPass"></b><button type="button" class="eye" id="popEye" aria-label="Password dikhao ya chhupao"></button></div>
-    </div>
-    <button type="button" class="abtn" id="popGo">Login karo</button>
   </div>
 </div>
 
@@ -1979,368 +1937,156 @@ async function showOut(bytes) {
   if (inCust) copyPreview();
 }
 </script>
-<script>/* ====================== Login / Registration / Forgot Password ======================
-   Ye sab aapke browser me chalta hai (koi server nahi), isliye:
-   - Registration browser ki storage me save hota hai: jis browser me register kiya, login bhi usi me chalega.
-   - Password kabhi seedha save nahi hota, sirf salt ke saath hash hota hai.
-   - OTP ka asli SMS bhejne ke liye SMS provider + chhota server chahiye. Jab tak `otpApi` khali hai, OTP "DEMO" box me
-     screen par dikhta hai (yani asli security nahi). Server lagane par OTP kabhi page tak aata hi nahi:
-
-   otpApi = "https://aapka-server.example.com"  (neeche ke 2 endpoint)
-     POST {otpApi}/send    body {"mobile":"9876543210"}               -> {"ok":true}   (server khud 4 digit OTP banaye, SMS bheje, hash+expiry rakhe)
-     POST {otpApi}/verify  body {"mobile":"9876543210","otp":"4821"}  -> {"ok":true}   (galat/expire par {"ok":false,"error":"..."})
+<script>/* ====================== Login (sirf Agent) + Forgot Password ======================
+   Ye page seedha GitHub par chalta hai, koi server nahi. Isliye:
+   - Sirf ek login hai (Agent). Username aur password yahan hash karke rakhe hain, seedha likhe nahi.
+   - Forgot Password: registered mobile number daalo -> naya password set karo.
+   - Naya password sirf usi browser me yaad rehta hai jisme badla gaya; doosre computer par
+     original password hi chalega (server ke bina sab computers me ek saath nahi badal sakta).
 */
 (function () {
   "use strict";
-  const CFG = {
-    otpApi: "",          // khali = DEMO mode (OTP screen par dikhega). Asli SMS ke liye apne server ka URL daalo.
-    demoShowOtp: true,   // DEMO mode me OTP dikhana (false karoge to bina server ke Forgot Password band ho jayega)
-    otpTtlSec: 300,      // OTP 5 minute me expire
-    otpMaxTries: 3,      // galat OTP kitni baar
-    otpResendSec: 30,    // dobara bhejne ke beech kam se kam itna wait
-    loginMaxFails: 5,    // itni galat koshish ke baad
-    loginLockSec: 60,    // itne second ke liye lock
-    minPass: 6
-  };
+  const ITER = 150000, MIN_PASS = 6, LOCK_MAX = 5, LOCK_SEC = 120, SESSION_DAYS = 30;
+  const D = {"u":{"salt":"15db3e86d22c7951b96dbe84d62be131","hash":"85c31f183314c78ff2aa4de8c597d176ed55709cdcd924c13cb951dadd277440"},"p":{"salt":"afd02d31dcc90aba8dd62ce64aa2ec4e","hash":"6d9e3a4340668b9d4dfd554709085a744770112b376c0329dc0e04e198c1ea42"},"m":{"salt":"298a0bf082bad74bc57aee27e177914c","hash":"998840c0fd32e5a9abcf9fd9fcce4475830b12184818e6b65828607cff7e3178"}};
+  const K_PW = "cardsheet.pw.v3", K_SESS = "cardsheet.session.v3", K_LOCK = "cardsheet.lock.v3";
 
   const $ = id => document.getElementById(id);
-  const K_USERS = "cardsheet.users.v1", K_SESSION = "cardsheet.session.v1", K_LOCK = "cardsheet.lock.v1";
-  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
-
-  /* ---------- storage ---------- */
   const st = {
     get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
     set(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } },
-    del(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } },
-    ok() { try { window.localStorage.setItem("cardsheet.t", "1"); window.localStorage.removeItem("cardsheet.t"); return true; } catch (e) { return false; } }
+    del(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
   };
   const jget = (k, d) => { try { const v = JSON.parse(st.get(k)); return v && typeof v === "object" ? v : d; } catch (e) { return d; } };
 
-  /* ---------- crypto helpers ---------- */
+  /* ---------- crypto ---------- */
   const te = new TextEncoder();
   const toHex = u8 => Array.from(u8, x => x.toString(16).padStart(2, "0")).join("");
   const fromHex = s => { const a = new Uint8Array(s.length / 2); for (let i = 0; i < a.length; i++) a[i] = parseInt(s.substr(i * 2, 2), 16); return a; };
-  const concat = (...p) => { const o = new Uint8Array(p.reduce((n, x) => n + x.length, 0)); let k = 0; p.forEach(x => { o.set(x, k); k += x.length; }); return o; };
-  const rnd = n => { const a = new Uint8Array(n); window.crypto.getRandomValues(a); return a; };
   const eq = (a, b) => { if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; };
-
-  const K256 = new Uint32Array([
-    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-  ]);
-  // SHA-256 (sirf tab kaam aata hai jab browser ka WebCrypto na mile, aur OTP ko hash karne me)
-  function sha256(msg) {
-    const l = msg.length, bits = l * 8, n = ((l + 9 + 63) >> 6) << 6, m = new Uint8Array(n);
-    m.set(msg); m[l] = 0x80;
-    const dv = new DataView(m.buffer);
-    dv.setUint32(n - 8, Math.floor(bits / 4294967296)); dv.setUint32(n - 4, bits >>> 0);
-    let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a, h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
-    const w = new Uint32Array(64);
-    for (let off = 0; off < n; off += 64) {
-      for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4);
-      for (let i = 16; i < 64; i++) {
-        const a = w[i - 15], b = w[i - 2];
-        const s0 = ((a >>> 7) | (a << 25)) ^ ((a >>> 18) | (a << 14)) ^ (a >>> 3);
-        const s1 = ((b >>> 17) | (b << 15)) ^ ((b >>> 19) | (b << 13)) ^ (b >>> 10);
-        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
-      }
-      let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
-      for (let i = 0; i < 64; i++) {
-        const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
-        const t1 = (h + S1 + ((e & f) ^ (~e & g)) + K256[i] + w[i]) | 0;
-        const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
-        const t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
-        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
-      }
-      h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
-    }
-    const out = new Uint8Array(32), ov = new DataView(out.buffer);
-    [h0, h1, h2, h3, h4, h5, h6, h7].forEach((v, i) => ov.setUint32(i * 4, v));
-    return out;
-  }
   const hasSubtle = () => !!(window.crypto && window.crypto.subtle && window.crypto.subtle.importKey && window.crypto.subtle.deriveBits);
-  // password -> hash. p1 = PBKDF2-SHA256 (150000 baar), s1 = salt ke saath 20000 baar SHA-256 (jab WebCrypto na ho)
-  async function hashPw(pw, saltHex, alg) {
-    const salt = fromHex(saltHex), pwb = te.encode(pw);
-    if (alg === "p1") {
-      if (!hasSubtle()) throw new Error("NO_SUBTLE");
-      const key = await window.crypto.subtle.importKey("raw", pwb, "PBKDF2", false, ["deriveBits"]);
-      return toHex(new Uint8Array(await window.crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 150000 }, key, 256)));
-    }
-    const tail = concat(salt, pwb); let h = sha256(tail);
-    for (let i = 0; i < 20000; i++) h = sha256(concat(h, tail));
-    return toHex(h);
+  async function pbkdf2(text, saltHex) {
+    const key = await window.crypto.subtle.importKey("raw", te.encode(text), "PBKDF2", false, ["deriveBits"]);
+    return toHex(new Uint8Array(await window.crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: fromHex(saltHex), iterations: ITER }, key, 256)));
   }
-  // 0000-9999 me se barabar chance se ek 4 digit OTP
-  function genOtp() {
-    const buf = new Uint32Array(1), lim = Math.floor(4294967296 / 10000) * 10000; let x;
-    do { window.crypto.getRandomValues(buf); x = buf[0]; } while (x >= lim);
-    return String(x % 10000).padStart(4, "0");
-  }
+  const newSalt = () => { const a = new Uint8Array(16); window.crypto.getRandomValues(a); return toHex(a); };
+  const currentPw = () => { const o = jget(K_PW, null); return o && typeof o.salt === "string" && typeof o.hash === "string" ? o : D.p; };
 
-  /* ---------- small UI helpers ---------- */
+  /* ---------- UI helpers ---------- */
   const EYE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
   const EYE_OFF = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 19.5C5.5 19.5 1.5 12 1.5 12a19 19 0 0 1 4.6-5.4M9.9 4.7A10 10 0 0 1 12 4.5c6.5 0 10.5 7.5 10.5 7.5a19 19 0 0 1-2.4 3.4"/><path d="M1 1l22 22M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
   const setMsg = (id, txt, kind) => { const el = $(id); el.textContent = txt || ""; el.className = "amsg" + (kind ? " " + kind : ""); };
-  const clean = s => String(s || "").replace(/\s+/g, " ").trim();
   const normMobile = v => { let d = String(v || "").replace(/\D/g, ""); if (d.length === 12 && d.startsWith("91")) d = d.slice(2); else if (d.length === 11 && d[0] === "0") d = d.slice(1); return d; };
-  const okMobile = m => /^[6-9]\d{9}$/.test(m);
-  const maskMobile = m => m.slice(0, 2) + "••••••" + m.slice(-2);
 
   document.querySelectorAll(".eye[data-for]").forEach(b => {
     b.innerHTML = EYE;
     b.onclick = () => { const i = $(b.dataset.for), show = i.type === "password"; i.type = show ? "text" : "password"; b.innerHTML = show ? EYE_OFF : EYE; };
   });
-  ["lg_user", "rg_mobile", "fg_user"].forEach(id => {
-    const el = $(id);
-    el.addEventListener("input", () => { el.value = normMobile(el.value).slice(0, 10); });
-  });
-  $("fg_otp").addEventListener("input", () => { $("fg_otp").value = $("fg_otp").value.replace(/\D/g, "").slice(0, 4); });
+  $("fg_user").addEventListener("input", () => { $("fg_user").value = normMobile($("fg_user").value).slice(0, 10); });
+
+  /* ---------- lock: 5 galat koshish -> 2 minute (login aur forgot dono) ---------- */
+  const lockLeft = () => { const o = jget(K_LOCK, {}); return o.until > Date.now() ? Math.ceil((o.until - Date.now()) / 1000) : 0; };
+  function noteFail() {
+    const now = Date.now(), o = jget(K_LOCK, { f: 0, until: 0 });
+    o.f = ((o.until || 0) > now ? 0 : (o.f || 0)) + 1;
+    if (o.f >= LOCK_MAX) { o.f = 0; o.until = now + LOCK_SEC * 1000; }
+    st.set(K_LOCK, JSON.stringify(o));
+    return o.until > now;
+  }
+  const clearFails = () => st.del(K_LOCK);
+  const lockMsg = s => `Bahut zyada galat koshish. ${s} second baad dobara try karo.`;
 
   /* ---------- tabs ---------- */
-  const FORMS = { login: "fLogin", register: "fReg", forgot: "fForgot" };
+  const FORMS = { login: "fLogin", forgot: "fForgot" };
   function showTab(name) {
     document.querySelectorAll(".atab").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
     Object.keys(FORMS).forEach(k => $(FORMS[k]).classList.toggle("hide", k !== name));
-    ["lg_msg", "rg_msg", "fg_msg"].forEach(id => setMsg(id, ""));
+    ["lg_msg", "fg_msg"].forEach(id => setMsg(id, ""));
     if (name === "forgot") fgReset();
-    const first = { login: "lg_user", register: "rg_mobile", forgot: "fg_user" }[name];
-    try { $(first).focus(); } catch (e) { /* ignore */ }
+    try { $(name === "login" ? "lg_user" : "fg_user").focus(); } catch (e) { /* ignore */ }
   }
   document.querySelectorAll(".atab").forEach(b => b.onclick = () => showTab(b.dataset.tab));
 
-  /* ---------- session / unlock ---------- */
-  function enterApp(u) {
-    $("uName").textContent = u.name + " · " + u.shop;
+  /* ---------- unlock / logout ---------- */
+  function enterApp() {
+    $("uName").textContent = "Agent";
     $("userChip").classList.remove("hide");
     document.body.classList.remove("locked");
     try { window.scrollTo(0, 0); } catch (e) { /* ignore */ }
   }
-  $("logoutBtn").onclick = () => { st.del(K_SESSION); window.location.reload(); }; // reload = screen par rakha customer data bhi saaf
-
-  /* ---------- registration ---------- */
-  function showPop(user, pass) {
-    $("popUser").textContent = user; $("popPass").textContent = pass; $("popEye").innerHTML = EYE_OFF; $("popPass").dataset.shown = "1";
-    $("authPop").classList.remove("hide");
-    try { $("popGo").focus(); } catch (e) { /* ignore */ }
-  }
-  $("popEye").onclick = () => {
-    const el = $("popPass"), shown = el.dataset.shown === "1";
-    if (shown) { el.dataset.v = el.textContent; el.textContent = "•".repeat(Math.min(12, el.dataset.v.length)); el.dataset.shown = "0"; $("popEye").innerHTML = EYE; }
-    else { el.textContent = el.dataset.v || ""; el.dataset.shown = "1"; $("popEye").innerHTML = EYE_OFF; }
-  };
-  $("popGo").onclick = () => {
-    const u = $("popUser").textContent;
-    $("popPass").textContent = ""; $("popPass").dataset.v = ""; // password popup band hote hi page se hata do
-    $("authPop").classList.add("hide");
-    showTab("login");
-    $("lg_user").value = u;
-    setMsg("lg_msg", "Registration ho gaya. Ab apna password daalke login karo.", "ok");
-    try { $("lg_pass").focus(); } catch (e) { /* ignore */ }
-  };
-
-  $("fReg").addEventListener("submit", async e => {
-    e.preventDefault();
-    const m = normMobile($("rg_mobile").value), name = clean($("rg_name").value), shop = clean($("rg_shop").value), pass = $("rg_pass").value;
-    if (!okMobile(m)) return setMsg("rg_msg", "Sahi 10 digit mobile number daalo (6, 7, 8 ya 9 se shuru).", "err");
-    if (name.length < 2) return setMsg("rg_msg", "Apna naam likho.", "err");
-    if (shop.length < 2) return setMsg("rg_msg", "Shop name likho.", "err");
-    if (pass.length < CFG.minPass) return setMsg("rg_msg", `Password kam se kam ${CFG.minPass} akshar ka rakho.`, "err");
-    if (!st.ok()) return setMsg("rg_msg", "Is browser me storage band hai (private mode?), isliye registration nahi ho sakta.", "err");
-    const users = jget(K_USERS, {});
-    if (has(users, m)) return setMsg("rg_msg", "Ye mobile number pehle se registered hai. Login karo, ya Forgot Password use karo.", "err");
-    $("rg_btn").disabled = true; setMsg("rg_msg", "Account ban raha hai...", "");
-    try {
-      const salt = toHex(rnd(16)), alg = hasSubtle() ? "p1" : "s1";
-      const hash = await hashPw(pass, salt, alg);
-      users[m] = { mobile: m, name, shop, salt, alg, hash, created: Date.now() };
-      if (!st.set(K_USERS, JSON.stringify(users))) throw new Error("save");
-      setMsg("rg_msg", "");
-      $("rg_mobile").value = ""; $("rg_name").value = ""; $("rg_shop").value = ""; $("rg_pass").value = "";
-      showPop(m, pass);
-    } catch (err) {
-      setMsg("rg_msg", "Registration nahi ho paaya. Dobara koshish karo.", "err");
-    } finally { $("rg_btn").disabled = false; }
-  });
+  $("logoutBtn").onclick = () => { st.del(K_SESS); window.location.reload(); }; // reload = screen par rakha customer data bhi saaf
 
   /* ---------- login ---------- */
-  const lockLeft = m => { const o = jget(K_LOCK, {})[m]; return o && o.u > Date.now() ? Math.ceil((o.u - Date.now()) / 1000) : 0; };
-  function noteFail(m) {
-    const all = jget(K_LOCK, {}), o = (has(all, m) && all[m]) || { f: 0, u: 0 };
-    o.f = (o.u > Date.now() ? 0 : o.f) + 1;
-    if (o.f >= CFG.loginMaxFails) { o.f = 0; o.u = Date.now() + CFG.loginLockSec * 1000; }
-    all[m] = o; st.set(K_LOCK, JSON.stringify(all));
-    return o.u > Date.now();
-  }
-  function clearFails(m) { const all = jget(K_LOCK, {}); if (has(all, m)) { delete all[m]; st.set(K_LOCK, JSON.stringify(all)); } }
-
   $("fLogin").addEventListener("submit", async e => {
     e.preventDefault();
-    const m = normMobile($("lg_user").value), pass = $("lg_pass").value;
-    if (!okMobile(m) || !pass) return setMsg("lg_msg", "Username (mobile number) aur password dono daalo.", "err");
-    const lk = lockLeft(m);
-    if (lk > 0) return setMsg("lg_msg", `Bahut zyada galat koshish. ${lk} second baad dobara try karo.`, "err");
+    const user = $("lg_user").value.trim(), pass = $("lg_pass").value;
+    if (!user || !pass) return setMsg("lg_msg", "Username aur password dono daalo.", "err");
+    if (!hasSubtle()) return setMsg("lg_msg", "Is browser me secure login nahi chal raha. Chrome me https link se kholo.", "err");
+    const lk = lockLeft();
+    if (lk > 0) return setMsg("lg_msg", lockMsg(lk), "err");
     $("lg_btn").disabled = true; setMsg("lg_msg", "Check ho raha hai...", "");
     try {
-      const users = jget(K_USERS, {}), u = has(users, m) ? users[m] : null;
-      let good = false;
-      if (u) good = eq(await hashPw(pass, u.salt, u.alg), u.hash);
-      else await hashPw(pass, "0".repeat(32), hasSubtle() ? "p1" : "s1"); // user na ho tab bhi same time lage
-      if (!good) {
-        setMsg("lg_msg", noteFail(m) ? `Bahut zyada galat koshish. ${CFG.loginLockSec} second baad dobara try karo.` : "Username ya password galat hai.", "err");
-      } else {
-        clearFails(m); $("lg_pass").value = "";
-        st.set(K_SESSION, JSON.stringify({ m, t: Date.now() }));
-        enterApp(u);
-      }
+      const pw = currentPw();
+      const okU = eq(await pbkdf2(user, D.u.salt), D.u.hash);   // dono hamesha check hote hain
+      const okP = eq(await pbkdf2(pass, pw.salt), pw.hash);
+      if (!(okU && okP)) return setMsg("lg_msg", noteFail() ? lockMsg(LOCK_SEC) : "Username ya password galat hai.", "err");
+      clearFails(); $("lg_pass").value = "";
+      st.set(K_SESS, JSON.stringify({ t: Date.now(), v: pw.hash.slice(0, 16) }));
+      enterApp();
     } catch (err) {
-      setMsg("lg_msg", err && err.message === "NO_SUBTLE" ? "Is link par secure login nahi chal raha. File ko seedha Chrome me kholo ya https link use karo." : "Login me dikkat aayi. Dobara koshish karo.", "err");
+      setMsg("lg_msg", "Login me dikkat aayi. Dobara koshish karo.", "err");
     } finally { $("lg_btn").disabled = false; }
   });
 
-  /* ---------- forgot password: username -> OTP -> new password ---------- */
-  let otp = null, grant = null, fgMobile = "", resendTimer = 0;
-
-  async function apiPost(path, body) {
-    const r = await fetch(CFG.otpApi.replace(/\/+$/, "") + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    let j = null; try { j = await r.json(); } catch (e) { /* ignore */ }
-    return { ok: !!(r.ok && j && j.ok === true), j };
-  }
-  async function sendOtp(m) {
-    const now = Date.now();
-    const sentMap = jget("cardsheet.otpsent.v1", {}), last = has(sentMap, m) ? +sentMap[m] || 0 : 0;
-    if (now - last < CFG.otpResendSec * 1000 && now >= last) return { err: `OTP abhi bheja hai. ${Math.ceil((CFG.otpResendSec * 1000 - (now - last)) / 1000)} second baad dobara bhejo.` };
-    const mark = () => { sentMap[m] = now; st.set("cardsheet.otpsent.v1", JSON.stringify(sentMap)); };
-    if (CFG.otpApi) {
-      let r; try { r = await apiPost("/send", { mobile: m }); } catch (e) { return { err: "OTP service se connect nahi ho paaya. Internet check karo." }; }
-      if (!r.ok) return { err: (r.j && r.j.error) || "OTP nahi bhej paaye. Thodi der baad koshish karo." };
-      mark(); otp = { mobile: m, mode: "api", exp: now + CFG.otpTtlSec * 1000, tries: 0, sentAt: now };
-      return { mode: "api" };
-    }
-    if (!CFG.demoShowOtp) return { err: "OTP service abhi set nahi hai." };
-    const code = genOtp(), salt = toHex(rnd(8));
-    mark(); otp = { mobile: m, mode: "demo", salt, hash: toHex(sha256(te.encode(salt + ":" + m + ":" + code))), exp: now + CFG.otpTtlSec * 1000, tries: 0, sentAt: now };
-    return { mode: "demo", code };
-  }
-  async function checkOtp(m, code) {
-    const s = otp;
-    if (!s || s.mobile !== m) return { err: "Pehle OTP bhejo.", dead: true };
-    if (Date.now() > s.exp) { otp = null; return { err: "OTP expire ho gaya. Naya OTP mangao.", dead: true }; }
-    if (s.tries >= CFG.otpMaxTries) { otp = null; return { err: "Bahut galat OTP. Naya OTP mangao.", dead: true }; }
-    s.tries++;
-    let good = false;
-    if (s.mode === "api") {
-      let r; try { r = await apiPost("/verify", { mobile: m, otp: code }); } catch (e) { s.tries--; return { err: "OTP service se connect nahi ho paaya. Internet check karo." }; }
-      good = r.ok;
-      if (!good && r.j && r.j.error) { if (s.tries >= CFG.otpMaxTries) otp = null; return { err: r.j.error, dead: !otp }; }
-    } else good = eq(toHex(sha256(te.encode(s.salt + ":" + m + ":" + code))), s.hash);
-    if (good) { otp = null; grant = { mobile: m, token: toHex(rnd(16)), exp: Date.now() + 10 * 60 * 1000 }; return { ok: true, token: grant.token }; }
-    if (s.tries >= CFG.otpMaxTries) { otp = null; return { err: "Bahut galat OTP. Naya OTP mangao.", dead: true }; }
-    return { err: `OTP galat hai. ${CFG.otpMaxTries - s.tries} koshish baaki.` };
-  }
-
-  function fgStep(n) { [1, 2, 3].forEach(i => $("fgS" + i).classList.toggle("hide", i !== n)); }
+  /* ---------- forgot password: mobile number -> naya password ---------- */
+  let grantUntil = 0;
   function fgReset() {
-    clearInterval(resendTimer); otp = null; grant = null; fgMobile = "";
-    ["fg_user", "fg_otp", "fg_p1", "fg_p2"].forEach(id => $(id).value = "");
+    grantUntil = 0;
+    ["fg_user", "fg_p1", "fg_p2"].forEach(id => $(id).value = "");
     ["fg_p1", "fg_p2"].forEach(id => { $(id).type = "password"; });
     document.querySelectorAll("#fgS3 .eye").forEach(b => b.innerHTML = EYE);
-    $("smsBox").classList.add("hide");
-    const note = $("fgDemoNote");
-    if (CFG.otpApi) note.classList.add("hide");
-    else {
-      note.classList.remove("hide");
-      note.textContent = CFG.demoShowOtp
-        ? "Demo mode: SMS service abhi connected nahi hai, isliye OTP yahin screen par dikhega."
-        : "OTP service abhi set nahi hai, isliye Forgot Password abhi band hai.";
-    }
-    $("fg_send").disabled = !CFG.otpApi && !CFG.demoShowOtp;
-    fgStep(1);
+    $("fgS1").classList.remove("hide"); $("fgS3").classList.add("hide");
   }
-  function startResend() {
-    clearInterval(resendTimer);
-    const b = $("fg_resend"); let left = CFG.otpResendSec; b.disabled = true;
-    const tick = () => {
-      if (left <= 0) { clearInterval(resendTimer); b.disabled = false; b.textContent = "OTP dobara bhejo"; return; }
-      b.textContent = `OTP dobara bhejo (${left}s)`; left--;
-    };
-    tick(); resendTimer = setInterval(tick, 1000);
-  }
-  function showSent(res) {
-    $("fgSent").textContent = `OTP ${maskMobile(fgMobile)} par bheja gaya hai. ${Math.round(CFG.otpTtlSec / 60)} minute me expire hoga.`;
-    if (res.mode === "demo") {
-      $("smsText").textContent = ` Aapka OTP ${res.code} hai. Ye ${Math.round(CFG.otpTtlSec / 60)} minute me expire hoga. Kisi ko na batayein. (SMS service connected nahi hai, isliye yahin dikh raha hai)`;
-      $("smsBox").classList.remove("hide");
-    } else $("smsBox").classList.add("hide");
-  }
-
   $("fgS1").addEventListener("submit", async e => {
     e.preventDefault();
     const m = normMobile($("fg_user").value);
-    if (!okMobile(m)) return setMsg("fg_msg", "Apna registered mobile number (Username) daalo.", "err");
-    const users = jget(K_USERS, {});
-    if (!has(users, m)) return setMsg("fg_msg", "Ye username registered nahi hai. Pehle Registration karo.", "err");
-    $("fg_send").disabled = true; setMsg("fg_msg", "OTP bheja ja raha hai...", "");
+    if (!/^[6-9]\d{9}$/.test(m)) return setMsg("fg_msg", "Registered mobile number daalo.", "err");
+    if (!hasSubtle()) return setMsg("fg_msg", "Is browser me secure mode nahi hai. Chrome me https link se kholo.", "err");
+    const lk = lockLeft();
+    if (lk > 0) return setMsg("fg_msg", lockMsg(lk), "err");
+    $("fg_send").disabled = true; setMsg("fg_msg", "Check ho raha hai...", "");
     try {
-      const res = await sendOtp(m);
-      if (res.err) return setMsg("fg_msg", res.err, "err");
-      fgMobile = m; showSent(res); setMsg("fg_msg", "");
-      $("fg_otp").value = ""; fgStep(2); startResend();
-      try { $("fg_otp").focus(); } catch (er) { /* ignore */ }
-    } finally { $("fg_send").disabled = !CFG.otpApi && !CFG.demoShowOtp; }
+      if (!eq(await pbkdf2(m, D.m.salt), D.m.hash)) return setMsg("fg_msg", noteFail() ? lockMsg(LOCK_SEC) : "Ye mobile number registered nahi hai.", "err");
+      clearFails(); grantUntil = Date.now() + 10 * 60 * 1000;
+      $("fgS1").classList.add("hide"); $("fgS3").classList.remove("hide");
+      setMsg("fg_msg", "Mobile number sahi hai. Ab naya password set karo.", "ok");
+      try { $("fg_p1").focus(); } catch (er) { /* ignore */ }
+    } catch (err) {
+      setMsg("fg_msg", "Dikkat aayi. Dobara koshish karo.", "err");
+    } finally { $("fg_send").disabled = false; }
   });
-  $("fg_resend").onclick = async () => {
-    $("fg_resend").disabled = true;
-    const res = await sendOtp(fgMobile);
-    if (res.err) { setMsg("fg_msg", res.err, "err"); $("fg_resend").disabled = false; return; }
-    showSent(res); setMsg("fg_msg", "Naya OTP bhej diya.", "ok"); $("fg_otp").value = ""; startResend();
-  };
-  $("fg_change").onclick = () => { fgReset(); setMsg("fg_msg", ""); };
-
-  $("fgS2").addEventListener("submit", async e => {
-    e.preventDefault();
-    const code = $("fg_otp").value.trim();
-    if (!/^\d{4}$/.test(code)) return setMsg("fg_msg", "4 digit ka OTP daalo.", "err");
-    $("fg_verify").disabled = true;
-    try {
-      const r = await checkOtp(fgMobile, code);
-      if (r.ok) { setMsg("fg_msg", "OTP sahi hai. Ab naya password set karo.", "ok"); fgStep(3); try { $("fg_p1").focus(); } catch (er) { /* ignore */ } return; }
-      setMsg("fg_msg", r.err, "err");
-      if (r.dead) { clearInterval(resendTimer); $("fg_resend").disabled = false; $("fg_resend").textContent = "Naya OTP bhejo"; }
-    } finally { $("fg_verify").disabled = false; }
-  });
-
   $("fgS3").addEventListener("submit", async e => {
     e.preventDefault();
     const p1 = $("fg_p1").value, p2 = $("fg_p2").value;
-    if (!grant || grant.mobile !== fgMobile || Date.now() > grant.exp) { fgReset(); return setMsg("fg_msg", "OTP verify nahi hua ya time khatam ho gaya. Dobara shuru karo.", "err"); }
-    if (p1.length < CFG.minPass) return setMsg("fg_msg", `Naya password kam se kam ${CFG.minPass} akshar ka rakho.`, "err");
+    if (Date.now() > grantUntil) { fgReset(); return setMsg("fg_msg", "Time khatam ho gaya. Mobile number se dobara shuru karo.", "err"); }
+    if (p1.length < MIN_PASS) return setMsg("fg_msg", `Naya password kam se kam ${MIN_PASS} akshar ka rakho.`, "err");
     if (p1 !== p2) return setMsg("fg_msg", "Dono password same nahi hain.", "err");
     $("fg_reset").disabled = true;
     try {
-      const users = jget(K_USERS, {}), u = has(users, fgMobile) ? users[fgMobile] : null;
-      if (!u) { fgReset(); return setMsg("fg_msg", "Ye username registered nahi hai.", "err"); }
-      u.salt = toHex(rnd(16)); u.alg = hasSubtle() ? "p1" : "s1"; u.hash = await hashPw(p1, u.salt, u.alg);
-      users[fgMobile] = u;
-      if (!st.set(K_USERS, JSON.stringify(users))) throw new Error("save");
-      const done = fgMobile; grant = null; clearFails(done);
-      showTab("login"); $("lg_user").value = done;
+      const salt = newSalt(), hash = await pbkdf2(p1, salt);
+      if (!st.set(K_PW, JSON.stringify({ salt, hash }))) throw new Error("save");
+      st.del(K_SESS); clearFails(); grantUntil = 0;
+      showTab("login");
       setMsg("lg_msg", "Password badal gaya. Ab naye password se login karo.", "ok");
-      try { $("lg_pass").focus(); } catch (er) { /* ignore */ }
+      try { $("lg_user").focus(); } catch (er) { /* ignore */ }
     } catch (err) {
-      setMsg("fg_msg", "Password badal nahi paaya. Dobara koshish karo.", "err");
+      setMsg("fg_msg", "Password badal nahi paaya (browser storage band ho sakta hai).", "err");
     } finally { $("fg_reset").disabled = false; }
   });
 
-  /* ---------- start ---------- */
-  if (!st.ok()) { const w = $("authWarn"); w.textContent = "Is browser me storage band hai (private mode?), isliye login aur registration kaam nahi karenge."; w.classList.remove("hide"); }
-  const sess = jget(K_SESSION, null);
-  if (sess && typeof sess.m === "string") {
-    const users = jget(K_USERS, {});
-    if (has(users, sess.m)) enterApp(users[sess.m]); else st.del(K_SESSION);
-  }
+  /* ---------- start: purana login yaad ho to seedha andar ---------- */
+  const s = jget(K_SESS, null);
+  if (s && typeof s.v === "string" && Date.now() - (+s.t || 0) < SESSION_DAYS * 86400000 && eq(s.v, currentPw().hash.slice(0, 16))) enterApp();
+  else if (s) st.del(K_SESS);
 })();
 </script>
 </body>
